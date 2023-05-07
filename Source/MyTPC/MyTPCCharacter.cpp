@@ -67,7 +67,7 @@ void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyTPCCharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AMyTPCCharacter::MoveForward);
@@ -112,6 +112,14 @@ void AMyTPCCharacter::MoveForward(float Value)
 {
 	if ((Controller != nullptr) && (Value != 0.0f))
 	{
+		if (bIsRun)
+		{
+			GetCharacterMovement()->MaxWalkSpeed=RunSpeed;
+		}
+		else
+		{
+			GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
+		}
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -126,6 +134,14 @@ void AMyTPCCharacter::MoveRight(float Value)
 {
 	if ( (Controller != nullptr) && (Value != 0.0f) )
 	{
+		if (bIsRun)
+		{
+			GetCharacterMovement()->MaxWalkSpeed=RunSpeed;
+		}
+		else
+		{
+			GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
+		}
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -134,5 +150,18 @@ void AMyTPCCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
+	}
+}
+
+void AMyTPCCharacter::Jump()
+{
+	Super::Jump();
+	if (bIsRun)
+	{
+		GetCharacterMovement()->JumpZVelocity = RunJumpZVelocity;
+	}
+	else
+	{
+		GetCharacterMovement()->JumpZVelocity = DefaultJumpZVelocity;
 	}
 }

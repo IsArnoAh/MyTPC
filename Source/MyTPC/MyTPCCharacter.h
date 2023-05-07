@@ -25,6 +25,22 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Input)
 	float TurnRateGamepad;
 
+	//默认参数设置，跳跃高度，和移动速度，以及奔跑状态
+	UPROPERTY(EditAnywhere, Category = "Jump")
+	float DefaultJumpZVelocity = 300.f;
+
+	UPROPERTY(EditAnywhere, Category = "Jump")
+	float RunJumpZVelocity = 600.f;
+	
+	UPROPERTY(EditAnywhere, Category = "Move")
+	float WalkSpeed=220.0f;
+	
+	UPROPERTY(EditAnywhere, Category = "Move")
+	float RunSpeed=600.0f;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsRun=false;
+
 protected:
 
 	/** Called for forwards/backward input */
@@ -32,7 +48,10 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
-	
+
+	//复习跳函数
+	virtual  void Jump() override;
+
 	/** 
 	 * Called via input to turn at a given rate. 
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
