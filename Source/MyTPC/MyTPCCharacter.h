@@ -30,7 +30,7 @@ public:
 	float DefaultJumpZVelocity = 300.f;
 
 	UPROPERTY(EditAnywhere, Category = "Jump")
-	float RunJumpZVelocity = 600.f;
+	float RunJumpZVelocity = 400.f;
 	
 	UPROPERTY(EditAnywhere, Category = "Move")
 	float WalkSpeed=220.0f;
@@ -48,8 +48,10 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
+//奔跑函数声明
+	void Run();
 
-	//复习跳函数
+	//重写跳函数
 	virtual  void Jump() override;
 
 	/** 

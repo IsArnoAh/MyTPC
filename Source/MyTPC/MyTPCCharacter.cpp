@@ -69,6 +69,7 @@ void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyTPCCharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Run",IE_Pressed,this,&AMyTPCCharacter::Run);
 
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AMyTPCCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &AMyTPCCharacter::MoveRight);
@@ -152,7 +153,7 @@ void AMyTPCCharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
-
+//控制跳跃
 void AMyTPCCharacter::Jump()
 {
 	Super::Jump();
@@ -164,4 +165,9 @@ void AMyTPCCharacter::Jump()
 	{
 		GetCharacterMovement()->JumpZVelocity = DefaultJumpZVelocity;
 	}
+}
+//奔跑函数实现
+void AMyTPCCharacter::Run()
+{
+	bIsRun=!bIsRun;
 }
