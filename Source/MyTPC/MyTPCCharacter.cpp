@@ -159,6 +159,7 @@ void AMyTPCCharacter::Run()
 	if (bIsRun)
 	{
 		GetCharacterMovement()->MaxWalkSpeed=RunSpeed;
+		GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 		bIsCrouch=false;
 	}
 	else
@@ -174,10 +175,12 @@ void AMyTPCCharacter::Crouch()
 	{
 		GetCharacterMovement()->MaxWalkSpeed=CrouchSpeed;
 		bIsRun=false;
+		GetCapsuleComponent()->SetCapsuleHalfHeight(68.0f);
 	}
 	else
 	{
 		GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
+		GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 	}
 }
 
