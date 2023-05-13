@@ -30,9 +30,9 @@ AMyTPCCharacter::AMyTPCCharacter()
 
 	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
 	// instead of recompiling to adjust them
-	GetCharacterMovement()->JumpZVelocity = 700.f;
+	GetCharacterMovement()->JumpZVelocity = DefaultJumpZVelocity;
 	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed = 500.f;
+	GetCharacterMovement()->MaxWalkSpeed =WalkSpeed;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
@@ -51,7 +51,7 @@ AMyTPCCharacter::AMyTPCCharacter()
 	FVector FollowCameraPos = FollowCamera->GetComponentLocation();
 
 	// 将FollowCamera向上偏移100个单位
-	FollowCameraPos.Z += 50.0f;
+	FollowCameraPos.Z += 55.0f;
 
 	// 更新FollowCamera的位置
 	FollowCamera->SetWorldLocation(FollowCameraPos);
@@ -70,6 +70,7 @@ void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyTPCCharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAction("Run",IE_Pressed,this,&AMyTPCCharacter::Run);
+	PlayerInputComponent->BindAction("Crouch",IE_Pressed,this,&AMyTPCCharacter::Crouch);
 
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AMyTPCCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &AMyTPCCharacter::MoveRight);
@@ -113,14 +114,6 @@ void AMyTPCCharacter::MoveForward(float Value)
 {
 	if ((Controller != nullptr) && (Value != 0.0f))
 	{
-		if (bIsRun)
-		{
-			GetCharacterMovement()->MaxWalkSpeed=RunSpeed;
-		}
-		else
-		{
-			GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
-		}
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -135,14 +128,7 @@ void AMyTPCCharacter::MoveRight(float Value)
 {
 	if ( (Controller != nullptr) && (Value != 0.0f) )
 	{
-		if (bIsRun)
-		{
-			GetCharacterMovement()->MaxWalkSpeed=RunSpeed;
-		}
-		else
-		{
-			GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
-		}
+		
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -170,4 +156,28 @@ void AMyTPCCharacter::Jump()
 void AMyTPCCharacter::Run()
 {
 	bIsRun=!bIsRun;
+	if (bIsRun)
+	{
+		GetCharacterMovement()->MaxWalkSpeed=RunSpeed;
+		bIsCrouch=false;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
+	}
 }
+//蹲伏函数实现
+void AMyTPCCharacter::Crouch()
+{
+	bIsCrouch=!bIsCrouch;
+	if (bIsCrouch)
+	{
+		GetCharacterMovement()->MaxWalkSpeed=CrouchSpeed;
+		bIsRun=false;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
+	}
+}
+

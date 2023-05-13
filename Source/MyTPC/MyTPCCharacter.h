@@ -21,11 +21,18 @@ class AMyTPCCharacter : public ACharacter
 public:
 	AMyTPCCharacter();
 
+	
+	
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Input)
 	float TurnRateGamepad;
-
-	//默认参数设置，跳跃高度，和移动速度，以及奔跑状态
+	
+	//奔跑状态，蹲伏状态
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	bool bIsRun;
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	bool bIsCrouch;
+	//默认参数设置，跳跃高度，和移动速度，
 	UPROPERTY(EditAnywhere, Category = "Jump")
 	float DefaultJumpZVelocity = 300.f;
 
@@ -35,11 +42,13 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Move")
 	float WalkSpeed=220.0f;
 	
+	
 	UPROPERTY(EditAnywhere, Category = "Move")
 	float RunSpeed=600.0f;
 
-	UPROPERTY(BlueprintReadWrite)
-	bool bIsRun=false;
+	UPROPERTY(EditAnywhere, Category = "Move")
+	float CrouchSpeed=200.0f;
+
 
 protected:
 
@@ -48,8 +57,10 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
-//奔跑函数声明
+	//奔跑函数声明
 	void Run();
+	//蹲伏函数声明
+	void Crouch();
 
 	//重写跳函数
 	virtual  void Jump() override;
