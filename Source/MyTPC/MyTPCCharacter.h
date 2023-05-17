@@ -22,7 +22,6 @@ public:
 	AMyTPCCharacter();
 
 	
-	
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Input)
 	float TurnRateGamepad;
@@ -32,6 +31,8 @@ public:
 	bool bIsRun;
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool bIsCrouch;
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	bool Standing=true;
 	//默认参数设置，跳跃高度，和移动速度，
 	UPROPERTY(EditAnywhere, Category = "Jump")
 	float DefaultJumpZVelocity = 300.f;
@@ -60,7 +61,8 @@ protected:
 	//奔跑函数声明
 	void Run();
 	//蹲伏函数声明
-	void Crouch();
+	UFUNCTION(BlueprintCallable, Category = "Move")
+	void MyCrouch();
 
 	//重写跳函数
 	virtual  void Jump() override;
@@ -93,5 +95,6 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	
 };
 

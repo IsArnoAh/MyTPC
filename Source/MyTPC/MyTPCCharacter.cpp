@@ -23,6 +23,7 @@ AMyTPCCharacter::AMyTPCCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+	
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
@@ -70,7 +71,7 @@ void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyTPCCharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAction("Run",IE_Pressed,this,&AMyTPCCharacter::Run);
-	PlayerInputComponent->BindAction("Crouch",IE_Pressed,this,&AMyTPCCharacter::Crouch);
+	// PlayerInputComponent->BindAction("Crouch",IE_Pressed,this,&AMyTPCCharacter::Crouch);
 
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AMyTPCCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &AMyTPCCharacter::MoveRight);
@@ -161,6 +162,8 @@ void AMyTPCCharacter::Run()
 		GetCharacterMovement()->MaxWalkSpeed=RunSpeed;
 		GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 		bIsCrouch=false;
+		Standing=true;
+		CameraBoom->TargetArmLength = 250.0f;
 	}
 	else
 	{
@@ -168,19 +171,26 @@ void AMyTPCCharacter::Run()
 	}
 }
 //蹲伏函数实现
-void AMyTPCCharacter::Crouch()
+void AMyTPCCharacter::MyCrouch()
 {
 	bIsCrouch=!bIsCrouch;
 	if (bIsCrouch)
 	{
 		GetCharacterMovement()->MaxWalkSpeed=CrouchSpeed;
 		bIsRun=false;
+		Standing=false;
 		GetCapsuleComponent()->SetCapsuleHalfHeight(68.0f);
+		// CameraBoom->TargetArmLength = 300.0f;
 	}
 	else
 	{
 		GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
 		GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
+		// CameraBoom->TargetArmLength = 250.0f;b
+		Standing=true;
 	}
+
 }
+
+
 
