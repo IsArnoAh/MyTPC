@@ -5,7 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "MotionWarping/Public/MotionWarping.h"
+#include "MotionWarping.h"
 #include "MyTPCCharacter.generated.h"
 
 
@@ -97,7 +97,6 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 	// Motion Warping Component
-
 	
 public:
 	/** Returns CameraBoom subobject **/
