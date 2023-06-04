@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "MotionWarping.h"
+#include "MotionwarpingComponent.h"
 #include "MyTPCCharacter.generated.h"
 
 
@@ -14,6 +15,7 @@ UCLASS(config=Game)
 class AMyTPCCharacter : public ACharacter
 {
 	GENERATED_BODY()
+	
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -91,12 +93,13 @@ protected:
 
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
-protected:
+	
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 	// Motion Warping Component
+	UPROPERTY(BlueprintReadWrite,Category="Animation")
+	UMotionWarpingComponent* MotionWarpingComponent;
 	
 public:
 	/** Returns CameraBoom subobject **/
