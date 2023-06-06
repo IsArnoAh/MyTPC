@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MyTPCCharacter.h"
-#include "MotionWarping.h"
 #include "MotionwarpingComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -15,38 +14,37 @@
 
 AMyTPCCharacter::AMyTPCCharacter()
 {
-	// Set size for collision capsule
+	// 胶囊体体积设置
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
-	// set our turn rate for input
+	// 旋转值
 	TurnRateGamepad = 50.f;
 
-	// Don't rotate when the controller rotates. Let that just affect the camera.
+	// 相机旋转参数设置
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 	
 
-	// Configure character movement
+	// 移动配置
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
 
-	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
-	// instead of recompiling to adjust them
+	//角色移动部分参数配置
 	GetCharacterMovement()->JumpZVelocity = DefaultJumpZVelocity;
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MaxWalkSpeed =WalkSpeed;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
-	// Create a camera boom (pulls in towards the player if there is a collision)
+	//创建相机与角色组件弹簧臂
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 250.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 	CameraBoom->bDoCollisionTest=true;
 
-	// Create a follow camera
+	// 创建相机
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
@@ -69,61 +67,48 @@ AMyTPCCharacter::AMyTPCCharacter()
 
 void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
-	// Set up gameplay key bindings
+	//操作映射
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyTPCCharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAction("Run",IE_Pressed,this,&AMyTPCCharacter::Run);
-	// PlayerInputComponent->BindAction("Crouch",IE_Pressed,this,&AMyTPCCharacter::Crouch);
 
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AMyTPCCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &AMyTPCCharacter::MoveRight);
 
-	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
-	// "turn" handles devices that provide an absolute delta, such as a mouse.
-	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
+	//映射操作
 	PlayerInputComponent->BindAxis("Turn Right / Left Mouse", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("Turn Right / Left Gamepad", this, &AMyTPCCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("Look Up / Down Mouse", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("Look Up / Down Gamepad", this, &AMyTPCCharacter::LookUpAtRate);
 
-	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AMyTPCCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AMyTPCCharacter::TouchStopped);
 }
 
-void AMyTPCCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	Jump();
-}
-
-void AMyTPCCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-	StopJumping();
-}
 
 void AMyTPCCharacter::TurnAtRate(float Rate)
 {
-	// calculate delta for this frame from the rate information
+	// 控制镜头左右旋转
 	AddControllerYawInput(Rate * TurnRateGamepad * GetWorld()->GetDeltaSeconds());
 }
 
 void AMyTPCCharacter::LookUpAtRate(float Rate)
 {
-	// calculate delta for this frame from the rate information
+	// 设置镜头上下旋转
 	AddControllerPitchInput(Rate * TurnRateGamepad * GetWorld()->GetDeltaSeconds());
 }
 
+//角色移动函数
 void AMyTPCCharacter::MoveForward(float Value)
 {
 	if ((Controller != nullptr) && (Value != 0.0f))
 	{
-		// find out which way is forward
+		// 定位向前向量
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// get forward vector
+		// 获取向前向量
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		// 重置位置
 		AddMovementInput(Direction, Value);
 	}
 }
@@ -133,13 +118,13 @@ void AMyTPCCharacter::MoveRight(float Value)
 	if ( (Controller != nullptr) && (Value != 0.0f) )
 	{
 		
-		// find out which way is right
+		// 定位向右向量
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 	
-		// get right vector 
+		// 获取向右向量
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		// add movement in that direction
+		// 重置位置
 		AddMovementInput(Direction, Value);
 	}
 }
@@ -154,6 +139,11 @@ void AMyTPCCharacter::Jump()
 	else
 	{
 		GetCharacterMovement()->JumpZVelocity = DefaultJumpZVelocity;
+		bIsCrouch=false;
+		GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
+		GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
+		CameraBoom->TargetArmLength = 250.0f;
+		Standing=true;
 	}
 }
 //奔跑函数实现
@@ -183,13 +173,11 @@ void AMyTPCCharacter::MyCrouch()
 		bIsRun=false;
 		Standing=false;
 		GetCapsuleComponent()->SetCapsuleHalfHeight(68.0f);
-		// CameraBoom->TargetArmLength = 300.0f;
 	}
 	else
 	{
 		GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
 		GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
-		// CameraBoom->TargetArmLength = 250.0f;b
 		Standing=true;
 	}
 
