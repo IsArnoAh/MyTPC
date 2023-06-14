@@ -58,6 +58,19 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Move")
 	float CrouchSpeed=200.0f;
 
+	//攀爬的参数配置
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector ClimbStart;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector ClimbMid;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector ClimbEnd;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bCanClimb;
+
 
 protected:
 
@@ -71,6 +84,10 @@ protected:
 	//蹲伏函数声明
 	UFUNCTION(BlueprintCallable, Category = "Move")
 	void MyCrouch();
+
+	//攀爬函数声明
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	void MyClimb();
 
 	//重写跳函数
 	virtual  void Jump() override;
@@ -86,12 +103,7 @@ protected:
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
-
-	/** Handler for when a touch input begins. */
-	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/** Handler for when a touch input stops. */
-	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+	
 	
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

@@ -60,10 +60,10 @@ AMyTPCCharacter::AMyTPCCharacter()
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Input
+// 输入配置
 
 void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
@@ -180,6 +180,12 @@ void AMyTPCCharacter::MyCrouch()
 		GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 		Standing=true;
 	}
+
+}
+
+//攀爬函数实现
+void AMyTPCCharacter::MyClimb()
+{
 
 }
 
