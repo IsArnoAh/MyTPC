@@ -8,12 +8,14 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyTPCCharacter
 
 AMyTPCCharacter::AMyTPCCharacter()
 {
+	Health=100.0f;
 	// 胶囊体体积设置
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -182,12 +184,27 @@ void AMyTPCCharacter::MyCrouch()
 	}
 
 }
-
-//攀爬函数实现
-void AMyTPCCharacter::MyClimb()
+//Vault检测更新
+bool AMyTPCCharacter::UpdateJudgeVault()
 {
-
+	bool newJudge=true;
+	if (GetMovementComponent()->IsFalling() || GetMovementComponent()->IsFlying())
+	{
+		newJudge=false;
+	}
+	return newJudge;
 }
 
+//测试函数
+void AMyTPCCharacter::UpdateHealth()
+{
+	Health-=50.0f;
+	FString HealthString = FString::Printf(TEXT("Health: %s"), *FString::SanitizeFloat(Health)); // 将HealthValue格式化成字符串
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, HealthString, true);
+	if (Health<=0)
+	{
+		UGameplayStatics::OpenLevel(GetWorld(), FName(*GetWorld()->GetName()), false);
+	}
+}
 
 

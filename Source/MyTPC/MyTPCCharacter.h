@@ -28,11 +28,22 @@ class AMyTPCCharacter : public ACharacter
 	
 public:
 	AMyTPCCharacter();
-
 	
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Input)
 	float TurnRateGamepad;
+
+	//角色基础参数配置
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="Character Config")
+	float Health=100.0f;
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="Character Config")
+	float Mental=100.0f;
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="Character Config")
+	float Armor=.0f;
+
+	//判定参数
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	bool bJudgeVault;
 	
 	//奔跑状态，蹲伏状态
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
@@ -51,25 +62,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Move")
 	float WalkSpeed=220.0f;
 	
-	
 	UPROPERTY(EditAnywhere, Category = "Move")
 	float RunSpeed=600.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Move")
 	float CrouchSpeed=200.0f;
-
-	//攀爬的参数配置
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector ClimbStart;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector ClimbMid;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector ClimbEnd;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bCanClimb;
 
 
 protected:
@@ -84,13 +81,18 @@ protected:
 	//蹲伏函数声明
 	UFUNCTION(BlueprintCallable, Category = "Move")
 	void MyCrouch();
-
-	//攀爬函数声明
-	UFUNCTION(BlueprintCallable, Category = "Animation")
-	void MyClimb();
-
+	
 	//重写跳函数
 	virtual  void Jump() override;
+
+	//角色基础配置函数
+	UFUNCTION(BlueprintCallable, Category = "CharacterConfig")
+	void UpdateHealth();
+	
+	//角色判断参数函数
+	UFUNCTION(BlueprintCallable, Category = "Judge")
+	bool UpdateJudgeVault();
+	
 
 	/** 
 	 * Called via input to turn at a given rate. 
@@ -107,16 +109,17 @@ protected:
 	
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	// End of APawn interface
 	// Motion Warping Component
 	UPROPERTY(BlueprintReadWrite,Category="Animation")
 	UMotionWarpingComponent* MotionWarpingComponent;
-	
+
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+
 	
 };
 
