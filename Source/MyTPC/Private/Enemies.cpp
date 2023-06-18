@@ -3,12 +3,24 @@
 
 #include "Enemies.h"
 
+#include "Components/BoxComponent.h"
+
 // Sets default values
 AEnemies::AEnemies()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
+ 	BackArea=CreateDefaultSubobject<UBoxComponent>(TEXT("Back Area"));
+	BackArea->SetBoxExtent(FVector(50.f, 50.f, 50.f));
+	BackArea->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	BackArea->SetCollisionResponseToAllChannels(ECR_Ignore);
+	BackArea->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	// 将盒体触发器组件附加到角色上
+	BackArea->SetupAttachment(RootComponent);
+	Health=100.0f;
+	Mental=100.0f;
+	Armor=100.0f;
+	BackArea->OnComponentBeginOverlap.AddDynamic(this, &AEnemies::OnOverlapBegin);
+	BackArea->OnComponentEndOverlap.AddDynamic(this,&AEnemies::AEnemies::OnOverlapEnd);
+	
 }
 
 // Called when the game starts or when spawned
@@ -18,12 +30,6 @@ void AEnemies::BeginPlay()
 	
 }
 
-// Called every frame
-void AEnemies::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 // Called to bind functionality to input
 void AEnemies::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -31,4 +37,35 @@ void AEnemies::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+void AEnemies::BackAssassin_Implementation(FVector& RefLocation, FRotator& RefRotation)
+{
+	IEnemiesInterface::BackAssassin_Implementation(RefLocation, RefRotation);
+}
+
+void AEnemies::Test()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Hello")));
+}
+
+void AEnemies::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor != nullptr && OtherActor != this)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Overlap detected!")));
+	}
+}
+
+void AEnemies::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex)
+{
+	if (OtherActor != nullptr && OtherActor != this)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Overlap ended!")));
+	}
+}
+
+
+
 
