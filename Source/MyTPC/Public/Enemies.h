@@ -44,13 +44,11 @@ protected:
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
 					  class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 public:
-	UFUNCTION()
-	void Test();
-
-
+	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
+	UFUNCTION(BlueprintCallable,Category="Attacked")
+	//背部刺杀函数实现
 	virtual void BackAssassin_Implementation(FVector& RefLocation, FRotator& RefRotation) override;
 };

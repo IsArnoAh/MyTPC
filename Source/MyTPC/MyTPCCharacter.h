@@ -92,7 +92,9 @@ protected:
 	//角色判断参数函数
 	UFUNCTION(BlueprintCallable, Category = "Judge")
 	bool UpdateJudgeVault();
-	
+
+	UFUNCTION(BlueprintCallable, Category="Attack")
+	void BackAssassin(const TArray<int32>& Array);
 
 	/** 
 	 * Called via input to turn at a given rate. 
@@ -118,7 +120,7 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
+	
 
 	
 };

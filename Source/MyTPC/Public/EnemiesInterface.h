@@ -23,6 +23,6 @@ class MYTPC_API IEnemiesInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	//背部暗杀函数
-	UFUNCTION(BlueprintNativeEvent, Category = "MyCategory")
+	UFUNCTION(BlueprintCallable,BlueprintNativeEvent, Category = "Attacked")
 	void BackAssassin(FVector& RefLocation, FRotator& RefRotation);
 };

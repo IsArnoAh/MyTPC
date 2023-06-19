@@ -195,7 +195,7 @@ bool AMyTPCCharacter::UpdateJudgeVault()
 	return newJudge;
 }
 
-//测试函数
+//血量更新函数
 void AMyTPCCharacter::UpdateHealth()
 {
 	Health-=50.0f;
@@ -207,4 +207,14 @@ void AMyTPCCharacter::UpdateHealth()
 	}
 }
 
+//攻击函数
+//暗杀函数
+void AMyTPCCharacter::BackAssassin(const TArray<int32>& Array)
+{
+	// Array = GetOverlappingActors()
+	// for(auto& Element : Array)
+	// {
+	// 	// 对于每个元素执行相同的操作
+	// }
+}
 

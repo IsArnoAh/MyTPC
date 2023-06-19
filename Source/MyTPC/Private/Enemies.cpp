@@ -41,12 +41,9 @@ void AEnemies::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemies::BackAssassin_Implementation(FVector& RefLocation, FRotator& RefRotation)
 {
 	IEnemiesInterface::BackAssassin_Implementation(RefLocation, RefRotation);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Fine!")));
 }
 
-void AEnemies::Test()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Hello")));
-}
 
 void AEnemies::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
