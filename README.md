@@ -1,2 +1,2 @@
-# My Thired Person Character
+# My Third Person Character
 Third Character Test
