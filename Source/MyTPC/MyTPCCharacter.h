@@ -44,6 +44,8 @@ public:
 	//判定参数
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool bJudgeVault;
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	bool CanAssassin;
 	
 	//奔跑状态，蹲伏状态
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
@@ -94,7 +96,7 @@ protected:
 	bool UpdateJudgeVault();
 
 	UFUNCTION(BlueprintCallable, Category="Attack")
-	void BackAssassin(const TArray<int32>& Array);
+	void BackAssassin(TArray<int32>& Array);
 
 	/** 
 	 * Called via input to turn at a given rate. 

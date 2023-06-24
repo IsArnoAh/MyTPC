@@ -2,7 +2,7 @@
 
 
 #include "Enemies.h"
-
+#include "MyTPC/MyTPCCharacter.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -15,6 +15,7 @@ AEnemies::AEnemies()
 	BackArea->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	// 将盒体触发器组件附加到角色上
 	BackArea->SetupAttachment(RootComponent);
+	//基础配置
 	Health=100.0f;
 	Mental=100.0f;
 	Armor=100.0f;
@@ -48,8 +49,14 @@ void AEnemies::BackAssassin_Implementation(FVector& RefLocation, FRotator& RefRo
 void AEnemies::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor != nullptr && OtherActor != this)
+	if (OtherActor != nullptr && OtherActor->IsA<AMyTPCCharacter>())
 	{
+		AMyTPCCharacter* MyTPC = Cast<AMyTPCCharacter>(OtherActor);
+		if (MyTPC)
+		{
+			MyTPC->CanAssassin=true;
+		}
+
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Overlap detected!")));
 	}
 }
@@ -57,8 +64,13 @@ void AEnemies::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Other
 void AEnemies::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex)
 {
-	if (OtherActor != nullptr && OtherActor != this)
+	if (OtherActor != nullptr && OtherActor->IsA<AMyTPCCharacter>())
 	{
+		AMyTPCCharacter* MyTPC = Cast<AMyTPCCharacter>(OtherActor);
+		if (MyTPC)
+		{
+			MyTPC->CanAssassin=false;
+		}
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Overlap ended!")));
 	}
 }

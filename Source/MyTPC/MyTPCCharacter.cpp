@@ -209,7 +209,7 @@ void AMyTPCCharacter::UpdateHealth()
 
 //攻击函数
 //暗杀函数
-void AMyTPCCharacter::BackAssassin(const TArray<int32>& Array)
+void AMyTPCCharacter::BackAssassin(TArray<int32>& Array)
 {
 	// Array = GetOverlappingActors()
 	// for(auto& Element : Array)
