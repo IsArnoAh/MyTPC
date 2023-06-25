@@ -1,0 +1,54 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Components/ActorComponent.h"
+#include "PlayerVauleComponent.generated.h"
+
+
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class MYTPC_API UPlayerVauleComponent : public UActorComponent
+{
+	GENERATED_BODY()
+
+public:	
+	// Sets default values for this component's properties
+	UPlayerVauleComponent();
+	//数值定义
+	//参数配置
+	float MaxHealth;
+	float CurrentHealth;
+	float MaxStamina;
+	float CurrentStamina;
+	float CurrentXP;
+	float MaxXP;
+	int Level;
+	int SkillPoints;
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	//方法定义
+	//血量
+	UFUNCTION(BlueprintCallable,Category="Health")
+	void IncreaseHealth(float IncreaseHealth);
+	UFUNCTION(BlueprintCallable,Category="Health")
+	bool DecreaseHealth(float DecreaseHealth);
+	//体力
+	UFUNCTION(BlueprintCallable,Category="Stamina")
+	void IncreaseStamina(float IncreaseStamina);
+	UFUNCTION(BlueprintCallable,Category="Stamina")
+	bool DecreaseStamina(float DecreaseStamina);
+	//经验与等级
+	UFUNCTION(BlueprintCallable,Category="XP")
+	void IncreaseXP(float IncreaseXP);
+	UFUNCTION(BlueprintCallable,Category="XP")
+	void IncreaseLevel();
+		
+};

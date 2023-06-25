@@ -3,9 +3,9 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class MyTpcTarget : TargetRules
+public class MyTPCTarget : TargetRules
 {
-	public MyTpcTarget(TargetInfo Target) : base(Target)
+	public MyTPCTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;

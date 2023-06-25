@@ -15,6 +15,8 @@
 
 AMyTPCCharacter::AMyTPCCharacter()
 {
+ 
+	
 	Health=100.0f;
 	// 胶囊体体积设置
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -216,5 +218,10 @@ void AMyTPCCharacter::BackAssassin(TArray<int32>& Array)
 	// {
 	// 	// 对于每个元素执行相同的操作
 	// }
+}
+
+void AMyTPCCharacter::Test()
+{
+	
 }
 

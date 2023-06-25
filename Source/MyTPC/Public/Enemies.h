@@ -51,4 +51,6 @@ public:
 	UFUNCTION(BlueprintCallable,Category="Attacked")
 	//背部刺杀函数实现
 	virtual void BackAssassin_Implementation(FVector& RefLocation, FRotator& RefRotation) override;
+
+	
 };

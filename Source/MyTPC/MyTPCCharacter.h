@@ -109,13 +109,16 @@ protected:
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
-	
+	//测试函数
+	UFUNCTION(BlueprintCallable,Category="Test")
+	void Test();
 	
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// Motion Warping Component
 	UPROPERTY(BlueprintReadWrite,Category="Animation")
 	UMotionWarpingComponent* MotionWarpingComponent;
+
 
 public:
 	/** Returns CameraBoom subobject **/
