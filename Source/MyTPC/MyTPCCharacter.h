@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "MotionwarpingComponent.h"
+#include "PlayerValueComponent.h"
 #include "MyTPCCharacter.generated.h"
 
 
@@ -32,14 +33,7 @@ public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Input)
 	float TurnRateGamepad;
-
-	//角色基础参数配置
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="Character Config")
-	float Health=100.0f;
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="Character Config")
-	float Mental=100.0f;
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="Character Config")
-	float Armor=.0f;
+	
 
 	//判定参数
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
@@ -86,10 +80,7 @@ protected:
 	
 	//重写跳函数
 	virtual  void Jump() override;
-
-	//角色基础配置函数
-	UFUNCTION(BlueprintCallable, Category = "CharacterConfig")
-	void UpdateHealth();
+	
 	
 	//角色判断参数函数
 	UFUNCTION(BlueprintCallable, Category = "Judge")
@@ -115,9 +106,12 @@ protected:
 	
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	// Motion Warping Component
+	// 创建Motion Warping Component
 	UPROPERTY(BlueprintReadWrite,Category="Animation")
 	UMotionWarpingComponent* MotionWarpingComponent;
+	//角色数值组件
+	UPROPERTY(BlueprintReadWrite,Category="Animation")
+	UPlayerValueComponent* PlayerValueComponent;
 
 
 public:

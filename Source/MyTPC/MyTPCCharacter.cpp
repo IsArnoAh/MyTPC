@@ -15,60 +15,50 @@
 
 AMyTPCCharacter::AMyTPCCharacter()
 {
- 
-	
-	Health=100.0f;
+
 	// 胶囊体体积设置
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-
 	// 旋转值
 	TurnRateGamepad = 50.f;
-
 	// 相机旋转参数设置
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-	
-
 	// 移动配置
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
-
 	//角色移动部分参数配置
 	GetCharacterMovement()->JumpZVelocity = DefaultJumpZVelocity;
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MaxWalkSpeed =WalkSpeed;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
-
 	//创建相机与角色组件弹簧臂
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 250.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 	CameraBoom->bDoCollisionTest=true;
-
 	// 创建相机
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	// 获取当前FollowCamera的位置
 	FVector FollowCameraPos = FollowCamera->GetComponentLocation();
-
 	// 将FollowCamera向上偏移100个单位
 	FollowCameraPos.Z += 55.0f;
-
 	// 更新FollowCamera的位置
 	FollowCamera->SetWorldLocation(FollowCameraPos);
+
+	
 	// 创建MotionWarpingComponent组件实例
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
-
+	//创建数值组件;
+	PlayerValueComponent = NewObject<UPlayerValueComponent>(this, TEXT("PlayerValueComponent"));
+	
 }
 
 // 输入配置
-
 void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	//操作映射
@@ -88,7 +78,7 @@ void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 
 }
 
-
+//镜头移动
 void AMyTPCCharacter::TurnAtRate(float Rate)
 {
 	// 控制镜头左右旋转
@@ -116,7 +106,6 @@ void AMyTPCCharacter::MoveForward(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
-
 void AMyTPCCharacter::MoveRight(float Value)
 {
 	if ( (Controller != nullptr) && (Value != 0.0f) )
@@ -197,17 +186,6 @@ bool AMyTPCCharacter::UpdateJudgeVault()
 	return newJudge;
 }
 
-//血量更新函数
-void AMyTPCCharacter::UpdateHealth()
-{
-	Health-=50.0f;
-	FString HealthString = FString::Printf(TEXT("Health: %s"), *FString::SanitizeFloat(Health)); // 将HealthValue格式化成字符串
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, HealthString, true);
-	if (Health<=0)
-	{
-		UGameplayStatics::OpenLevel(GetWorld(), FName(*GetWorld()->GetName()), false);
-	}
-}
 
 //攻击函数
 //暗杀函数
@@ -222,6 +200,7 @@ void AMyTPCCharacter::BackAssassin(TArray<int32>& Array)
 
 void AMyTPCCharacter::Test()
 {
-	
+	PlayerValueComponent->DecreaseHealth(10.0f);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s: %f"), TEXT("MyFloatValue"), PlayerValueComponent->CurrentHealth));
 }
 

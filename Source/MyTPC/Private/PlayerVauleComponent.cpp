@@ -1,23 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PlayerVauleComponent.h"
+#include "..\Public\PlayerValueComponent.h"
 
 // Sets default values for this component's properties
-UPlayerVauleComponent::UPlayerVauleComponent()
+UPlayerValueComponent::UPlayerValueComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-}
-
-
-// Called when the game starts
-void UPlayerVauleComponent::BeginPlay()
-{
-	Super::BeginPlay();
 	//初级参数设置
 	Level=1;
 	CurrentHealth=100.0f;
@@ -27,19 +18,28 @@ void UPlayerVauleComponent::BeginPlay()
 	MaxStamina=100.0f;
 	MaxXP=100.0f;
 	// ...
+}
+
+
+// Called when the game starts
+void UPlayerValueComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// ...
 	
 }
 
 
 // Called every frame
-void UPlayerVauleComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UPlayerValueComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
 }
 
-void UPlayerVauleComponent::IncreaseHealth(float IncreaseHealth)
+void UPlayerValueComponent::IncreaseHealth(float IncreaseHealth)
 {
 	CurrentHealth+=IncreaseHealth;
 	if (CurrentHealth==MaxHealth)
@@ -48,7 +48,7 @@ void UPlayerVauleComponent::IncreaseHealth(float IncreaseHealth)
 	}
 }
 
-bool UPlayerVauleComponent::DecreaseHealth(float DecreaseHealth)
+bool UPlayerValueComponent::DecreaseHealth(float DecreaseHealth)
 {
 	bool bDead=false;
 	CurrentHealth-=DecreaseHealth;
@@ -59,7 +59,7 @@ bool UPlayerVauleComponent::DecreaseHealth(float DecreaseHealth)
 	return bDead;
 }
 
-void UPlayerVauleComponent::IncreaseStamina(float IncreaseStamina)
+void UPlayerValueComponent::IncreaseStamina(float IncreaseStamina)
 {
 	CurrentStamina+=IncreaseStamina;
 	if (CurrentStamina==MaxStamina)
@@ -68,7 +68,7 @@ void UPlayerVauleComponent::IncreaseStamina(float IncreaseStamina)
 	}
 }
 
-bool UPlayerVauleComponent::DecreaseStamina(float DecreaseStamina)
+bool UPlayerValueComponent::DecreaseStamina(float DecreaseStamina)
 {
 	bool bTired=false;
 	CurrentStamina-=DecreaseStamina;
@@ -79,7 +79,7 @@ bool UPlayerVauleComponent::DecreaseStamina(float DecreaseStamina)
 	return bTired;
 }
 
-void UPlayerVauleComponent::IncreaseXP(float IncreaseXP)
+void UPlayerValueComponent::IncreaseXP(float IncreaseXP)
 {
 	CurrentXP+=IncreaseXP;
 	if (CurrentXP>=MaxXP)
@@ -89,7 +89,7 @@ void UPlayerVauleComponent::IncreaseXP(float IncreaseXP)
 	}
 }
 
-void UPlayerVauleComponent::IncreaseLevel()
+void UPlayerValueComponent::IncreaseLevel()
 {
 	Level++;
 	SkillPoints++;

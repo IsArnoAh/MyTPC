@@ -4,17 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "PlayerVauleComponent.generated.h"
+#include "PlayerValueComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class MYTPC_API UPlayerVauleComponent : public UActorComponent
+class MYTPC_API UPlayerValueComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
+	
 	// Sets default values for this component's properties
-	UPlayerVauleComponent();
+	UPlayerValueComponent();
 	//数值定义
 	//参数配置
 	float MaxHealth;
@@ -50,5 +51,4 @@ public:
 	void IncreaseXP(float IncreaseXP);
 	UFUNCTION(BlueprintCallable,Category="XP")
 	void IncreaseLevel();
-		
 };
