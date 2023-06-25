@@ -54,8 +54,7 @@ AMyTPCCharacter::AMyTPCCharacter()
 	// 创建MotionWarpingComponent组件实例
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	//创建数值组件;
-	PlayerValueComponent = NewObject<UPlayerValueComponent>(this, TEXT("PlayerValueComponent"));
-	
+	PlayerValueComponent = CreateDefaultSubobject<UPlayerValueComponent>(TEXT("PlayerValueComponent"));
 }
 
 // 输入配置
