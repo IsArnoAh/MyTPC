@@ -115,9 +115,9 @@ protected:
 
 
 public:
-	/** Returns CameraBoom subobject **/
+	/** Returns CameraBoom subject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
+	/** Returns FollowCamera subject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	
 
