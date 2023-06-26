@@ -39,46 +39,47 @@ void UPlayerValueComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	// ...
 }
 
+//血量增减和死亡判定
 void UPlayerValueComponent::IncreaseHealth(float IncreaseHealth)
 {
 	CurrentHealth+=IncreaseHealth;
-	if (CurrentHealth==MaxHealth)
+	if (CurrentHealth>=MaxHealth)
 	{
 		CurrentHealth=MaxHealth;
 	}
 }
-
 bool UPlayerValueComponent::DecreaseHealth(float DecreaseHealth)
 {
 	bool bDead=false;
 	CurrentHealth-=DecreaseHealth;
 	if (CurrentHealth<=0)
 	{
+		CurrentHealth=0;
 		bDead=true;
 	}
 	return bDead;
 }
-
+//体力增减和死亡判断
 void UPlayerValueComponent::IncreaseStamina(float IncreaseStamina)
 {
 	CurrentStamina+=IncreaseStamina;
-	if (CurrentStamina==MaxStamina)
+	if (CurrentStamina>=MaxStamina)
 	{
 		CurrentStamina=MaxStamina;
 	}
 }
-
 bool UPlayerValueComponent::DecreaseStamina(float DecreaseStamina)
 {
 	bool bTired=false;
 	CurrentStamina-=DecreaseStamina;
 	if (CurrentStamina<=0)
 	{
+		CurrentStamina=0;
 		bTired=true;
 	}
 	return bTired;
 }
-
+//经验与等级
 void UPlayerValueComponent::IncreaseXP(float IncreaseXP)
 {
 	CurrentXP+=IncreaseXP;
@@ -88,10 +89,12 @@ void UPlayerValueComponent::IncreaseXP(float IncreaseXP)
 		IncreaseLevel();
 	}
 }
-
 void UPlayerValueComponent::IncreaseLevel()
 {
 	Level++;
 	SkillPoints++;
 }
+
+
+
 

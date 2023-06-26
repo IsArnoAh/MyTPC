@@ -27,6 +27,7 @@ public:
 	int Level;
 	int SkillPoints;
 
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -41,6 +42,8 @@ public:
 	void IncreaseHealth(float IncreaseHealth);
 	UFUNCTION(BlueprintCallable,Category="Health")
 	bool DecreaseHealth(float DecreaseHealth);
+	// UFUNCTION(BlueprintCallable,Category="Health")
+	// float HealthBar();
 	//体力
 	UFUNCTION(BlueprintCallable,Category="Stamina")
 	void IncreaseStamina(float IncreaseStamina);

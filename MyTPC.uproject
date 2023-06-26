@@ -4,7 +4,7 @@
 	"Category": "",
 	"Description": "",
 	"Modules": [
-		{
+{
 			"Name": "MyTPC",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
@@ -12,6 +12,7 @@
 				"Engine"
 			]
 		}
+		
 	],
 	"Plugins": [
 		{

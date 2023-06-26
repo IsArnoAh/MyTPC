@@ -197,9 +197,16 @@ void AMyTPCCharacter::BackAssassin(TArray<int32>& Array)
 	// }
 }
 
-void AMyTPCCharacter::Test()
+float AMyTPCCharacter::DecreaseHealth()
 {
 	PlayerValueComponent->DecreaseHealth(10.0f);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s: %f"), TEXT("MyFloatValue"), PlayerValueComponent->CurrentHealth));
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s: %f"), TEXT("Health:"), PlayerValueComponent->CurrentHealth));
+	return PlayerValueComponent->CurrentHealth/PlayerValueComponent->MaxHealth;
 }
 
+float AMyTPCCharacter::IncreaseHealth()
+{
+	PlayerValueComponent->IncreaseHealth(10.0f);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s: %f"), TEXT("Health:"), PlayerValueComponent->CurrentHealth));
+	return PlayerValueComponent->CurrentHealth/PlayerValueComponent->MaxHealth;
+}

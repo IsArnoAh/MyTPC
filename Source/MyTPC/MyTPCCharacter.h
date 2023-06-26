@@ -102,8 +102,10 @@ protected:
 	void LookUpAtRate(float Rate);
 	//测试函数
 	UFUNCTION(BlueprintCallable,Category="Test")
-	void Test();
-	
+	float DecreaseHealth();
+
+	UFUNCTION(BlueprintCallable,Category="Test")
+	float IncreaseHealth();
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// 创建Motion Warping Component
