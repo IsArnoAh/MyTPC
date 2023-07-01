@@ -2,7 +2,6 @@
 
 
 #pragma once
-
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "MotionwarpingComponent.h"
@@ -16,7 +15,7 @@ class AMyTPCCharacter : public ACharacter
 {
 	GENERATED_BODY()
 	
-
+	
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
@@ -50,37 +49,43 @@ public:
 	bool Standing=true;
 	//默认参数设置，跳跃高度，和移动速度，
 	UPROPERTY(EditAnywhere, Category = "Jump")
-	float DefaultJumpZVelocity = 300.f;
+	float DefaultJumpZVelocity = 200.f;
 
 	UPROPERTY(EditAnywhere, Category = "Jump")
 	float RunJumpZVelocity = 400.f;
 	
-	UPROPERTY(EditAnywhere, Category = "Move")
+	UPROPERTY(EditAnywhere, Category = "Movement")
 	float WalkSpeed=220.0f;
 	
-	UPROPERTY(EditAnywhere, Category = "Move")
+	UPROPERTY(EditAnywhere, Category = "Movement")
 	float RunSpeed=600.0f;
 
-	UPROPERTY(EditAnywhere, Category = "Move")
+	UPROPERTY(EditAnywhere, Category = "Movement")
 	float CrouchSpeed=200.0f;
 
 
-protected:
+	
+	
 
+protected:
+	//存放蓝图控件成功案例
+	 // UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUD")
+	 // TSubclassOf<UUserWidget> HUDWidgetClass;
+	
+	virtual void BeginPlay() override;
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
 	//奔跑函数声明
+	UFUNCTION(BlueprintCallable,Category="Movement")
 	void Run();
 	//蹲伏函数声明
-	UFUNCTION(BlueprintCallable, Category = "Move")
+	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MyCrouch();
-	
 	//重写跳函数
 	virtual  void Jump() override;
-	
 	
 	//角色判断参数函数
 	UFUNCTION(BlueprintCallable, Category = "Judge")
@@ -100,19 +105,13 @@ protected:
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
-	//测试函数
-	UFUNCTION(BlueprintCallable,Category="Test")
-	float DecreaseHealth();
-
-	UFUNCTION(BlueprintCallable,Category="Test")
-	float IncreaseHealth();
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// 创建Motion Warping Component
 	UPROPERTY(BlueprintReadWrite,Category="Animation")
 	UMotionWarpingComponent* MotionWarpingComponent;
 	//角色数值组件
-	UPROPERTY(BlueprintReadWrite,Category="Animation")
+	UPROPERTY(BlueprintReadWrite,Category="Value")
 	UPlayerValueComponent* PlayerValueComponent;
 
 

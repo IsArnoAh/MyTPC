@@ -39,16 +39,16 @@ public:
 	//方法定义
 	//血量
 	UFUNCTION(BlueprintCallable,Category="Health")
-	void IncreaseHealth(float IncreaseHealth);
+	float IncreaseHealth(float IncreaseHealth);
 	UFUNCTION(BlueprintCallable,Category="Health")
-	bool DecreaseHealth(float DecreaseHealth);
+	float DecreaseHealth(float DecreaseHealth);
 	// UFUNCTION(BlueprintCallable,Category="Health")
 	// float HealthBar();
 	//体力
 	UFUNCTION(BlueprintCallable,Category="Stamina")
-	void IncreaseStamina(float IncreaseStamina);
+	float IncreaseStamina(float IncreaseStamina);
 	UFUNCTION(BlueprintCallable,Category="Stamina")
-	bool DecreaseStamina(float DecreaseStamina);
+	float DecreaseStamina(float DecreaseStamina);
 	//经验与等级
 	UFUNCTION(BlueprintCallable,Category="XP")
 	void IncreaseXP(float IncreaseXP);

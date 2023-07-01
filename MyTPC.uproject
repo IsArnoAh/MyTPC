@@ -4,15 +4,15 @@
 	"Category": "",
 	"Description": "",
 	"Modules": [
-{
+		{
 			"Name": "MyTPC",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"Engine"
+				"Engine",
+				"UMG"
 			]
 		}
-		
 	],
 	"Plugins": [
 		{

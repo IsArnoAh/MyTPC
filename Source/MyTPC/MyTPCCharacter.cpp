@@ -13,9 +13,9 @@
 //////////////////////////////////////////////////////////////////////////
 // AMyTPCCharacter
 
+
 AMyTPCCharacter::AMyTPCCharacter()
 {
-
 	// 胶囊体体积设置
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	// 旋转值
@@ -49,12 +49,18 @@ AMyTPCCharacter::AMyTPCCharacter()
 	FollowCameraPos.Z += 55.0f;
 	// 更新FollowCamera的位置
 	FollowCamera->SetWorldLocation(FollowCameraPos);
-
 	
 	// 创建MotionWarpingComponent组件实例
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	//创建数值组件;
-	PlayerValueComponent = CreateDefaultSubobject<UPlayerValueComponent>(TEXT("PlayerValueComponent"));
+	 PlayerValueComponent = CreateDefaultSubobject<UPlayerValueComponent>(TEXT("PlayerValueComponent"));
+	
+	//蓝图控件加载成功案例
+	// static ConstructorHelpers::FClassFinder<UUserWidget> HUDWidgetClassFinder(TEXT("/Game/UI/WB_HUD"));
+	// if (HUDWidgetClassFinder.Succeeded())
+	// {
+	// 	HUDWidgetClass = HUDWidgetClassFinder.Class;
+	// }
 }
 
 // 输入配置
@@ -64,7 +70,6 @@ void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyTPCCharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	PlayerInputComponent->BindAction("Run",IE_Pressed,this,&AMyTPCCharacter::Run);
 
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AMyTPCCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &AMyTPCCharacter::MoveRight);
@@ -76,20 +81,34 @@ void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAxis("Look Up / Down Gamepad", this, &AMyTPCCharacter::LookUpAtRate);
 
 }
-
+void AMyTPCCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	//c++使用蓝图控件成功案例
+	// if (HUDWidgetClass)
+	// {
+	// 	UUserWidget* HUDWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetClass);
+	// 	if (HUDWidgetInstance)
+	// 	{
+	// 		HUDWidgetInstance->AddToViewport();
+	// 	}
+	// }
+	// else
+	// {
+	// 	GEngine->AddOnScreenDebugMessage(-1,2.0f,FColor::Blue,TEXT("no"),true);
+	// }
+}
 //镜头移动
 void AMyTPCCharacter::TurnAtRate(float Rate)
 {
 	// 控制镜头左右旋转
 	AddControllerYawInput(Rate * TurnRateGamepad * GetWorld()->GetDeltaSeconds());
 }
-
 void AMyTPCCharacter::LookUpAtRate(float Rate)
 {
 	// 设置镜头上下旋转
 	AddControllerPitchInput(Rate * TurnRateGamepad * GetWorld()->GetDeltaSeconds());
 }
-
 //角色移动函数
 void AMyTPCCharacter::MoveForward(float Value)
 {
@@ -184,8 +203,6 @@ bool AMyTPCCharacter::UpdateJudgeVault()
 	}
 	return newJudge;
 }
-
-
 //攻击函数
 //暗杀函数
 void AMyTPCCharacter::BackAssassin(TArray<int32>& Array)
@@ -197,16 +214,6 @@ void AMyTPCCharacter::BackAssassin(TArray<int32>& Array)
 	// }
 }
 
-float AMyTPCCharacter::DecreaseHealth()
-{
-	PlayerValueComponent->DecreaseHealth(10.0f);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s: %f"), TEXT("Health:"), PlayerValueComponent->CurrentHealth));
-	return PlayerValueComponent->CurrentHealth/PlayerValueComponent->MaxHealth;
-}
 
-float AMyTPCCharacter::IncreaseHealth()
-{
-	PlayerValueComponent->IncreaseHealth(10.0f);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%s: %f"), TEXT("Health:"), PlayerValueComponent->CurrentHealth));
-	return PlayerValueComponent->CurrentHealth/PlayerValueComponent->MaxHealth;
-}
+
+
