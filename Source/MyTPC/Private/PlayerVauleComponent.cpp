@@ -21,10 +21,8 @@ void UPlayerValueComponent::BeginPlay()
 	//初级参数设置
 	Level=1;
 	CurrentHealth=100.0f;
-	CurrentStamina=100.0f;
 	CurrentXP=0;
 	MaxHealth=100.0f;
-	MaxStamina=100.0f;
 	MaxXP=100.0f;
 	// ...
 	
@@ -57,25 +55,6 @@ float UPlayerValueComponent::DecreaseHealth(float DecreaseHealth)
 		CurrentHealth=0;
 	}
 	return CurrentHealth/MaxHealth;
-}
-//体力增减
-float UPlayerValueComponent::IncreaseStamina(float IncreaseStamina)
-{
-	CurrentStamina+=IncreaseStamina;
-	if (CurrentStamina>=MaxStamina)
-	{
-		CurrentStamina=MaxStamina;
-	}
-	return CurrentStamina/MaxStamina;
-}
-float UPlayerValueComponent::DecreaseStamina(float DecreaseStamina)
-{
-	CurrentStamina-=DecreaseStamina;
-	if (CurrentStamina<=0)
-	{
-		CurrentStamina=0;
-	}
-	return CurrentStamina/MaxStamina;
 }
 //经验与等级
 void UPlayerValueComponent::IncreaseXP(float IncreaseXP)

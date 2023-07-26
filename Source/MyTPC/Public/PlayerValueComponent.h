@@ -20,8 +20,6 @@ public:
 	//参数配置
 	float MaxHealth;
 	float CurrentHealth;
-	float MaxStamina;
-	float CurrentStamina;
 	float CurrentXP;
 	float MaxXP;
 	int Level;
@@ -42,13 +40,7 @@ public:
 	float IncreaseHealth(float IncreaseHealth);
 	UFUNCTION(BlueprintCallable,Category="Health")
 	float DecreaseHealth(float DecreaseHealth);
-	// UFUNCTION(BlueprintCallable,Category="Health")
-	// float HealthBar();
-	//体力
-	UFUNCTION(BlueprintCallable,Category="Stamina")
-	float IncreaseStamina(float IncreaseStamina);
-	UFUNCTION(BlueprintCallable,Category="Stamina")
-	float DecreaseStamina(float DecreaseStamina);
+	
 	//经验与等级
 	UFUNCTION(BlueprintCallable,Category="XP")
 	void IncreaseXP(float IncreaseXP);
