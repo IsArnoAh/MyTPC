@@ -173,11 +173,13 @@ void AMyTPCCharacter::Run()
 	{
 		GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
 	}
+	
 }
 //蹲伏函数实现
 void AMyTPCCharacter::MyCrouch()
 {
 	bIsCrouch=!bIsCrouch;
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	if (bIsCrouch)
 	{
 		GetCharacterMovement()->MaxWalkSpeed=CrouchSpeed;
@@ -191,6 +193,7 @@ void AMyTPCCharacter::MyCrouch()
 		GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 		Standing=true;
 	}
+
 
 }
 //Vault检测更新
