@@ -22,11 +22,14 @@ void UPlayerValueComponent::BeginPlay()
 	Level=1;
 	CurrentHealth=100.0f;
 	CurrentXP=0;
+	CurrentMental=200;
+	MaxMental=400;
 	MaxHealth=100.0f;
 	MaxXP=100.0f;
 	// ...
 	
 }
+
 
 
 // Called every frame
@@ -56,6 +59,8 @@ float UPlayerValueComponent::DecreaseHealth(float DecreaseHealth)
 	}
 	return CurrentHealth/MaxHealth;
 }
+
+
 //经验与等级
 void UPlayerValueComponent::IncreaseXP(float IncreaseXP)
 {
@@ -71,6 +76,22 @@ void UPlayerValueComponent::IncreaseLevel()
 	Level++;
 	SkillPoints++;
 }
+
+//精神值
+float UPlayerValueComponent::IncreaseMental(float IncreaseMental)
+{
+	CurrentMental+=IncreaseMental;
+	return CurrentMental/MaxMental;
+}
+
+float UPlayerValueComponent::DecreaseMental(float DecreaseMental)
+{
+	CurrentMental-=DecreaseMental;
+	return CurrentMental/MaxMental;
+}
+
+
+
 
 
 

@@ -22,6 +22,8 @@ public:
 	float CurrentHealth;
 	float CurrentXP;
 	float MaxXP;
+	float MaxMental;
+	float CurrentMental;
 	int Level;
 	int SkillPoints;
 
@@ -46,4 +48,10 @@ public:
 	void IncreaseXP(float IncreaseXP);
 	UFUNCTION(BlueprintCallable,Category="XP")
 	void IncreaseLevel();
+
+	//精神值
+	UFUNCTION(BlueprintCallable,Category="Mental")
+	float IncreaseMental(float IncreaseMental);
+	UFUNCTION(BlueprintCallable,Category="Mental")
+	float DecreaseMental(float DecreaseMental);
 };

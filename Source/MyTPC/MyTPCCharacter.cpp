@@ -70,9 +70,11 @@ void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyTPCCharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Run",IE_Pressed,this,&AMyTPCCharacter::Run);
 
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AMyTPCCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &AMyTPCCharacter::MoveRight);
+	
 
 	//映射操作
 	PlayerInputComponent->BindAxis("Turn Right / Left Mouse", this, &APawn::AddControllerYawInput);
@@ -186,6 +188,7 @@ void AMyTPCCharacter::MyCrouch()
 		bIsRun=false;
 		Standing=false;
 		GetCapsuleComponent()->SetCapsuleHalfHeight(68.0f);
+		
 	}
 	else
 	{
@@ -196,6 +199,9 @@ void AMyTPCCharacter::MyCrouch()
 
 
 }
+
+
+
 //Vault检测更新
 bool AMyTPCCharacter::UpdateJudgeVault()
 {
