@@ -8,7 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Kismet/GameplayStatics.h"
+// #include "Kismet/GameplayStatics.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyTPCCharacter
@@ -54,6 +54,8 @@ AMyTPCCharacter::AMyTPCCharacter()
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	//创建数值组件;
 	 PlayerValueComponent = CreateDefaultSubobject<UPlayerValueComponent>(TEXT("PlayerValueComponent"));
+	//创建战斗组件
+	Sys_Attack=CreateDefaultSubobject<USys_Attack>(TEXT("SysAttack"));
 	
 	//蓝图控件加载成功案例
 	// static ConstructorHelpers::FClassFinder<UUserWidget> HUDWidgetClassFinder(TEXT("/Game/UI/WB_HUD"));
@@ -181,7 +183,7 @@ void AMyTPCCharacter::Run()
 void AMyTPCCharacter::MyCrouch()
 {
 	bIsCrouch=!bIsCrouch;
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	// APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	if (bIsCrouch)
 	{
 		GetCharacterMovement()->MaxWalkSpeed=CrouchSpeed;

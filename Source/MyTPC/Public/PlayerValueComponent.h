@@ -20,12 +20,17 @@ public:
 	//参数配置
 	float MaxHealth;
 	float CurrentHealth;
+	
 	float CurrentXP;
 	float MaxXP;
+	
 	float MaxMental;
 	float CurrentMental;
+	
 	int Level;
 	int SkillPoints;
+
+	int Money;
 
 
 protected:
@@ -54,4 +59,10 @@ public:
 	float IncreaseMental(float IncreaseMental);
 	UFUNCTION(BlueprintCallable,Category="Mental")
 	float DecreaseMental(float DecreaseMental);
+
+	//金钱
+	UFUNCTION(BlueprintCallable,Category="Money")
+	int SpendMoney(int SpendNum);
+	UFUNCTION(BlueprintCallable,Category="Money")
+	int EarnMoney(int EarnNum);
 };

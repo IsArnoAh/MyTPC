@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "MotionwarpingComponent.h"
 #include "PlayerValueComponent.h"
+#include "Sys_Attack.h"
 #include "MyTPCCharacter.generated.h"
 
 
@@ -50,16 +51,12 @@ public:
 	//默认参数设置，跳跃高度，和移动速度，
 	UPROPERTY(EditAnywhere, Category = "Jump")
 	float DefaultJumpZVelocity = 200.f;
-
 	UPROPERTY(EditAnywhere, Category = "Jump")
 	float RunJumpZVelocity = 400.f;
-	
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float WalkSpeed=220.0f;
-	
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float RunSpeed=600.0f;
-
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float CrouchSpeed=200.0f;
 
@@ -110,10 +107,12 @@ protected:
 	// 创建Motion Warping Component
 	UPROPERTY(BlueprintReadWrite,Category="Animation")
 	UMotionWarpingComponent* MotionWarpingComponent;
-	//角色数值组件
+	//角色组件
 	UPROPERTY(BlueprintReadWrite,Category="Value")
 	UPlayerValueComponent* PlayerValueComponent;
-
+	UPROPERTY(BlueprintReadWrite,Category="Attack")
+	USys_Attack* Sys_Attack;
+	
 
 public:
 	/** Returns CameraBoom subject **/
@@ -121,7 +120,6 @@ public:
 	/** Returns FollowCamera subject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	
-
 	
 };
 

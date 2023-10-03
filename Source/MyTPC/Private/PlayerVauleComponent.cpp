@@ -8,7 +8,7 @@ UPlayerValueComponent::UPlayerValueComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 	
 	// ...
 }
@@ -89,6 +89,18 @@ float UPlayerValueComponent::DecreaseMental(float DecreaseMental)
 	CurrentMental-=DecreaseMental;
 	return CurrentMental/MaxMental;
 }
+
+int UPlayerValueComponent::SpendMoney(int SpendNum)
+{
+	return Money-=SpendNum;
+}
+
+int UPlayerValueComponent::EarnMoney(int EarnNum)
+{
+	return Money+=EarnNum;
+}
+
+
 
 
 
