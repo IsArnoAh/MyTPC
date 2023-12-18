@@ -16,6 +16,7 @@ public:
 	// Sets default values for this component's properties
 	USys_Attack();
 	bool bCanAttack=true;
+	bool bAttacking=false;
 	int SwordAttackIndex=0;
 
 protected:
@@ -28,7 +29,10 @@ public:
 	int SwordAttack();
 	UFUNCTION(BlueprintCallable,Category="Attack_Sword")
 	void ReSetSwordAttackIndex();
+	UFUNCTION(BlueprintCallable,Category="Attack_Sword")
+	bool GetAttacking();
+	UFUNCTION(BlueprintCallable,Category="Attack_Sword")
+	void IsAttacking();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
+	
 };

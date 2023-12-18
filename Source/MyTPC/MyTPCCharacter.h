@@ -9,23 +9,35 @@
 #include "Sys_Attack.h"
 #include "MyTPCCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum CharacterState {
+	Idle,
+	Walking,
+	Running,
+	Crouching,
+	Vaulting,
+	Attacking,
+	Assassinating,
+	Dead
+};
+
+// enum CharacterState
+// {
+// 	
+// };
 
 //C:\Program Files\Epic Games\UE_5.0\Engine\Plugins\Experimental\Animation\MotionWarping
 UCLASS(config=Game)
 class AMyTPCCharacter : public ACharacter
 {
 	GENERATED_BODY()
-	
-	
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 	
-
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
-
 	
 public:
 	AMyTPCCharacter();
@@ -34,12 +46,14 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Input)
 	float TurnRateGamepad;
 	
-
 	//判定参数
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TEnumAsByte<CharacterState> CurrentState=Idle;
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool bJudgeVault;
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool CanAssassin;
+	
 	
 	//奔跑状态，蹲伏状态
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
@@ -60,9 +74,20 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float CrouchSpeed=200.0f;
 
+	//计时器声明
+	FTimerHandle DelayedAttackHandle;
 
+
+private:
+	// 镜头移动速率
+	float CameraLerpSpeed=1.0f;
+	// 目标镜头弹簧臂
+	float CameraTargetArmLength=250.0f;
 	
-	
+	// 镜头移动计时器声明
+	FTimerHandle CameraMoveTimerHandle;
+	void UpdateCameraParameters(float TargetArmLength,float LerpSpeed);
+	void UpdateCameraArmLength();
 
 protected:
 	//存放蓝图控件成功案例
@@ -78,9 +103,11 @@ protected:
 	//奔跑函数声明
 	UFUNCTION(BlueprintCallable,Category="Movement")
 	void Run();
+	void StopRunning();
 	//蹲伏函数声明
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MyCrouch();
+	void StopCrouch();
 	//重写跳函数
 	virtual  void Jump() override;
 	
@@ -91,6 +118,11 @@ protected:
 	UFUNCTION(BlueprintCallable, Category="Attack")
 	void BackAssassin(TArray<int32>& Array);
 
+	UFUNCTION(BlueprintCallable, Category="Attack")
+	void SetAttacking();
+
+	UFUNCTION(BlueprintCallable,Category="Attack")
+	void DelayedSetAttacking();
 	/** 
 	 * Called via input to turn at a given rate. 
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
@@ -102,6 +134,7 @@ protected:
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
+	
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// 创建Motion Warping Component
@@ -119,7 +152,6 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-	
 	
 };
 

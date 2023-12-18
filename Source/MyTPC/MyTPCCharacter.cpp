@@ -12,8 +12,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 // AMyTPCCharacter
-
-
+// 角色构造函数，创建出对应相机,模型
 AMyTPCCharacter::AMyTPCCharacter()
 {
 	// 胶囊体体积设置
@@ -36,7 +35,7 @@ AMyTPCCharacter::AMyTPCCharacter()
 	//创建相机与角色组件弹簧臂
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 250.0f; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 600.0f; // The camera follows at this distance behind the character
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 	CameraBoom->bDoCollisionTest=true;
 	// 创建相机
@@ -63,6 +62,11 @@ AMyTPCCharacter::AMyTPCCharacter()
 	// {
 	// 	HUDWidgetClass = HUDWidgetClassFinder.Class;
 	// }
+	if (CurrentState==Idle)
+	{
+		UE_LOG(LogTemp,Log,TEXT("YEp"))
+	}
+	
 }
 
 // 输入配置
@@ -72,7 +76,13 @@ void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyTPCCharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	
 	PlayerInputComponent->BindAction("Run",IE_Pressed,this,&AMyTPCCharacter::Run);
+	PlayerInputComponent->BindAction("Run",IE_Released,this,&AMyTPCCharacter::StopRunning);
+	
+	PlayerInputComponent->BindAction("Crouch",IE_Pressed,this,&AMyTPCCharacter::MyCrouch);
+	PlayerInputComponent->BindAction("Crouch",IE_Released,this,&AMyTPCCharacter::StopCrouch);
+	
 
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AMyTPCCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &AMyTPCCharacter::MoveRight);
@@ -101,6 +111,11 @@ void AMyTPCCharacter::BeginPlay()
 	// {
 	// 	GEngine->AddOnScreenDebugMessage(-1,2.0f,FColor::Blue,TEXT("no"),true);
 	// }
+
+	GetWorldTimerManager().SetTimer(CameraMoveTimerHandle, this, &AMyTPCCharacter::UpdateCameraArmLength, 0.01f, true);
+
+	
+	
 }
 //镜头移动
 void AMyTPCCharacter::TurnAtRate(float Rate)
@@ -113,7 +128,11 @@ void AMyTPCCharacter::LookUpAtRate(float Rate)
 	// 设置镜头上下旋转
 	AddControllerPitchInput(Rate * TurnRateGamepad * GetWorld()->GetDeltaSeconds());
 }
-//角色移动函数
+
+/**
+ * @brief 角色移动值
+ * @param Value 0-1的轴量
+ */
 void AMyTPCCharacter::MoveForward(float Value)
 {
 	if ((Controller != nullptr) && (Value != 0.0f))
@@ -121,29 +140,68 @@ void AMyTPCCharacter::MoveForward(float Value)
 		// 定位向前向量
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
 		// 获取向前向量
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		// 重置位置
+		// 重置位置更新状态
 		AddMovementInput(Direction, Value);
+		// 重置更新攻击招数
+		Sys_Attack->ReSetSwordAttackIndex();
 	}
 }
 void AMyTPCCharacter::MoveRight(float Value)
 {
 	if ( (Controller != nullptr) && (Value != 0.0f) )
 	{
-		
 		// 定位向右向量
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
 		// 获取向右向量
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// 重置位置
 		AddMovementInput(Direction, Value);
+		//重置更新攻击招数
+		Sys_Attack->ReSetSwordAttackIndex();
 	}
 }
-//控制跳跃
+
+/**
+ * @brief 奔跑函数实现
+ */
+void AMyTPCCharacter::Run()
+{
+	if (CurrentState==Idle || CurrentState==Walking)
+	{
+		FVector ZeroVector(0.0f, 0.0f, 0.0f);
+		FVector IsVector(RootComponent->GetComponentVelocity());
+		if (IsVector!=ZeroVector)
+		{
+			GetCharacterMovement()->MaxWalkSpeed=RunSpeed;
+			GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
+			bIsCrouch=false;
+			Standing=true;
+			UpdateCameraParameters(360.0f,0.8f);
+			CurrentState=Running;
+		}
+		else 
+		{
+			StopRunning();
+		}
+	}
+}
+
+/**
+ * @brief 停止奔跑
+ */
+void AMyTPCCharacter::StopRunning()
+{
+	CurrentState=Walking;
+	UpdateCameraParameters(250.0f,1.0f);
+	GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
+}
+
+/**
+ * @brief 控制跳跃函数实现
+ */
 void AMyTPCCharacter::Jump()
 {
 	Super::Jump();
@@ -161,48 +219,32 @@ void AMyTPCCharacter::Jump()
 		Standing=true;
 	}
 }
-//奔跑函数实现
-void AMyTPCCharacter::Run()
-{
-	bIsRun=!bIsRun;
-	if (bIsRun)
-	{
-		GetCharacterMovement()->MaxWalkSpeed=RunSpeed;
-		GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
-		bIsCrouch=false;
-		Standing=true;
-		CameraBoom->TargetArmLength = 250.0f;
-	}
-	else
-	{
-		GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
-	}
-	
-}
-//蹲伏函数实现
+
+/**
+ * @brief 蹲伏函数实现
+ */
 void AMyTPCCharacter::MyCrouch()
 {
-	bIsCrouch=!bIsCrouch;
-	// APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	if (bIsCrouch)
+	if (CurrentState==Idle || CurrentState==Walking || CurrentState==Running)
 	{
 		GetCharacterMovement()->MaxWalkSpeed=CrouchSpeed;
 		bIsRun=false;
 		Standing=false;
+		bIsCrouch=true;
 		GetCapsuleComponent()->SetCapsuleHalfHeight(68.0f);
-		
+		UpdateCameraParameters(170.0f,0.8);
+		CurrentState=Crouching;
 	}
-	else
-	{
-		GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
-		GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
-		Standing=true;
-	}
-
-
 }
-
-
+void AMyTPCCharacter::StopCrouch()
+{
+	bIsCrouch=false;
+	GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
+	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
+	UpdateCameraParameters(250.0f,0.8f);
+	Standing=true;
+	CurrentState=Idle;
+}
 
 //Vault检测更新
 bool AMyTPCCharacter::UpdateJudgeVault()
@@ -225,6 +267,39 @@ void AMyTPCCharacter::BackAssassin(TArray<int32>& Array)
 	// }
 }
 
+/**
+ * @brief 延迟攻击
+ */
+void AMyTPCCharacter::DelayedSetAttacking()
+{
+	GetWorld()->GetTimerManager().SetTimer(DelayedAttackHandle,this,&AMyTPCCharacter::SetAttacking,0.5f,false);
+}
 
+void AMyTPCCharacter::SetAttacking()
+{
+	Sys_Attack->bAttacking=false;
+}
+
+/**
+ * @brief 更改相机参数
+ * @param TargetArmLength 相机弹簧臂长度
+ * @param LerpSpeed 缩放速度
+ */
+void AMyTPCCharacter::UpdateCameraParameters(float TargetArmLength,float LerpSpeed )
+{
+	CameraTargetArmLength=TargetArmLength;
+	CameraLerpSpeed=LerpSpeed;
+	GetWorldTimerManager().SetTimer(CameraMoveTimerHandle, this, &AMyTPCCharacter::UpdateCameraArmLength, 0.01f, true);
+}
+
+/**
+ * @brief 缩放相机
+ */
+void AMyTPCCharacter::UpdateCameraArmLength()
+{
+	float CurrentArmLength = CameraBoom->TargetArmLength;
+	CameraBoom->TargetArmLength = FMath::FInterpTo(CurrentArmLength, CameraTargetArmLength, GetWorld()->GetDeltaSeconds(), CameraLerpSpeed);
+
+}
 
 

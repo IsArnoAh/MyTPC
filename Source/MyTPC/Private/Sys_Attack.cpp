@@ -36,21 +36,34 @@ void USys_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 int USys_Attack::SwordAttack()
 {
 	switch (SwordAttackIndex)
-	{
-	case 0:
-		SwordAttackIndex+=1;return 0;
-	case 1:
-		SwordAttackIndex+=1;return 1;
-	case 2:
-		SwordAttackIndex+=1;return 2;
-	case 3:
-		SwordAttackIndex+=1;return 3;
-	default:SwordAttackIndex=0;SwordAttack();return 0;
+		{
+		case 0:
+			SwordAttackIndex+=1;return 0;
+		case 1:
+			SwordAttackIndex+=1;return 1;
+		case 2:
+			SwordAttackIndex+=1;return 2;
+		case 3:
+			SwordAttackIndex+=1;return 3;
+		default:SwordAttackIndex=0;SwordAttack();return 0;
 	}
+	
 }
 
 void USys_Attack::ReSetSwordAttackIndex()
 {
 	SwordAttackIndex=0;
 }
+
+bool USys_Attack::GetAttacking()
+{
+	return bAttacking;
+}
+
+void USys_Attack::IsAttacking()
+{
+	bAttacking=true;
+}
+
+
 
