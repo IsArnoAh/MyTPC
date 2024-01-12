@@ -20,19 +20,13 @@ public:
 	//参数配置
 	float MaxHealth;
 	float CurrentHealth;
-	
 	float CurrentXP;
 	float MaxXP;
-	
 	float MaxMental;
 	float CurrentMental;
-	
 	int Level;
 	int SkillPoints;
-
 	int Money;
-
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -65,4 +59,5 @@ public:
 	int SpendMoney(int SpendNum);
 	UFUNCTION(BlueprintCallable,Category="Money")
 	int EarnMoney(int EarnNum);
+	
 };

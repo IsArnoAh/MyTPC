@@ -1,6 +1,4 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-
-
 #pragma once
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
@@ -16,17 +14,12 @@ enum CharacterState {
 	Running,
 	Crouching,
 	Vaulting,
+	Talking,
 	Attacking,
 	Assassinating,
 	Dead
 };
 
-// enum CharacterState
-// {
-// 	
-// };
-
-//C:\Program Files\Epic Games\UE_5.0\Engine\Plugins\Experimental\Animation\MotionWarping
 UCLASS(config=Game)
 class AMyTPCCharacter : public ACharacter
 {
@@ -48,13 +41,12 @@ public:
 	
 	//判定参数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<CharacterState> CurrentState=Idle;
+	TEnumAsByte<CharacterState> CurrentState;
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool bJudgeVault;
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool CanAssassin;
-	
-	
+
 	//奔跑状态，蹲伏状态
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool bIsRun;
@@ -82,19 +74,20 @@ private:
 	// 镜头移动速率
 	float CameraLerpSpeed=1.0f;
 	// 目标镜头弹簧臂
-	float CameraTargetArmLength=250.0f;
+	float CameraTargetArmLength=150.0f;
+	// 相机目标值的y轴
+	float CameraTargetY=0.0f;
 	
 	// 镜头移动计时器声明
 	FTimerHandle CameraMoveTimerHandle;
-	void UpdateCameraParameters(float TargetArmLength,float LerpSpeed);
+	void UpdateArmLengthParameters(float TargetArmLength,float LerpSpeed);
 	void UpdateCameraArmLength();
 
+
 protected:
-	//存放蓝图控件成功案例
-	 // UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HUD")
-	 // TSubclassOf<UUserWidget> HUDWidgetClass;
 	
 	virtual void BeginPlay() override;
+	
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
 
@@ -107,6 +100,7 @@ protected:
 	//蹲伏函数声明
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MyCrouch();
+	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void StopCrouch();
 	//重写跳函数
 	virtual  void Jump() override;
@@ -114,9 +108,7 @@ protected:
 	//角色判断参数函数
 	UFUNCTION(BlueprintCallable, Category = "Judge")
 	bool UpdateJudgeVault();
-
-	UFUNCTION(BlueprintCallable, Category="Attack")
-	void BackAssassin(TArray<int32>& Array);
+	
 
 	UFUNCTION(BlueprintCallable, Category="Attack")
 	void SetAttacking();

@@ -42,7 +42,6 @@ void AEnemies::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemies::BackAssassin_Implementation(FVector& RefLocation, FRotator& RefRotation)
 {
 	IEnemiesInterface::BackAssassin_Implementation(RefLocation, RefRotation);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Fine!")));
 }
 
 
@@ -51,13 +50,11 @@ void AEnemies::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Other
 {
 	if (OtherActor != nullptr && OtherActor->IsA<AMyTPCCharacter>())
 	{
-		AMyTPCCharacter* MyTPC = Cast<AMyTPCCharacter>(OtherActor);
-		if (MyTPC)
+		if (AMyTPCCharacter* MyTPC = Cast<AMyTPCCharacter>(OtherActor))
 		{
 			MyTPC->CanAssassin=true;
 		}
-
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Overlap detected!")));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Assassated Ready")));
 	}
 }
 
@@ -66,12 +63,11 @@ void AEnemies::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 {
 	if (OtherActor != nullptr && OtherActor->IsA<AMyTPCCharacter>())
 	{
-		AMyTPCCharacter* MyTPC = Cast<AMyTPCCharacter>(OtherActor);
-		if (MyTPC)
+		if (AMyTPCCharacter* MyTPC = Cast<AMyTPCCharacter>(OtherActor))
 		{
 			MyTPC->CanAssassin=false;
 		}
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Overlap ended!")));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Leave Assassted Zone")));
 	}
 }
 

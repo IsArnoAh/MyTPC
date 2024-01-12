@@ -40,6 +40,8 @@ void UPlayerValueComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	// ...
 }
 
+
+
 //血量增减和死亡判定
 float UPlayerValueComponent::IncreaseHealth(float IncreaseHealth)
 {
