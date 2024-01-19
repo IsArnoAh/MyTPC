@@ -73,11 +73,9 @@ void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAction("Crouch",IE_Pressed,this,&AMyTPCCharacter::MyCrouch);
 	PlayerInputComponent->BindAction("Crouch",IE_Released,this,&AMyTPCCharacter::StopCrouch);
 	
-
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AMyTPCCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &AMyTPCCharacter::MoveRight);
 	
-
 	//映射操作
 	PlayerInputComponent->BindAxis("Turn Right / Left Mouse", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("Turn Right / Left Gamepad", this, &AMyTPCCharacter::TurnAtRate);
