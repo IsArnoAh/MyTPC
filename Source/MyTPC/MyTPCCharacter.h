@@ -15,6 +15,7 @@ enum CharacterState {
 	Crouching,
 	Vaulting,
 	Talking,
+	Shopping,
 	Attacking,
 	Assassinating,
 	Dead
@@ -109,7 +110,6 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Judge")
 	bool UpdateJudgeVault();
 	
-
 	UFUNCTION(BlueprintCallable, Category="Attack")
 	void SetAttacking();
 
