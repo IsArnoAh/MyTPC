@@ -4,22 +4,31 @@
 #include "GameFramework/Character.h"
 #include "MotionwarpingComponent.h"
 #include "PlayerValueComponent.h"
+#include "PlayerEnum.h"
 #include "Sys_Attack.h"
 #include "MyTPCCharacter.generated.h"
 
-UENUM(BlueprintType)
-enum CharacterState {
-	Idle,
-	Walking,
-	Running,
-	Crouching,
-	Vaulting,
-	Talking,
-	Shopping,
-	Attacking,
-	Assassinating,
-	Dead
-};
+// UENUM(BlueprintType)
+// enum CharacterState {
+// 	Idle,
+// 	Walking,
+// 	Running,
+// 	Crouching,
+// 	Vaulting,
+// 	Talking,
+// 	Shopping,
+// 	Attacking,
+// 	Assassinating,
+// 	Dead
+// };
+//
+// UENUM(BlueprintType)
+// enum WeaponType
+// {
+// 	Punch,
+// 	Sword,
+// 	Gun
+// };
 
 UCLASS(config=Game)
 class AMyTPCCharacter : public ACharacter
@@ -41,8 +50,11 @@ public:
 	float TurnRateGamepad;
 	
 	//判定参数
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TEnumAsByte<CharacterState> CurrentState;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// CharacterState CurrentState;
+	//
+	// WeaponType Weapon;
+	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool bJudgeVault;
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
@@ -70,8 +82,23 @@ public:
 	//计时器声明
 	FTimerHandle DelayedAttackHandle;
 
+	// get 和 set 方法
+	// 角色状态枚举
+	UFUNCTION(BlueprintCallable)
+	CharacterState GetCurrentState();
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentState(CharacterState newStatue);
+	// 角色持有武器状态枚举
+	UFUNCTION(BlueprintCallable)
+	WeaponType GetCurrentWeapon();
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentWeapon(WeaponType newWeapon);
 
 private:
+	// 状态枚举定义
+	CharacterState CurrentState;
+	WeaponType CurrentWeapon;
+	
 	// 镜头移动速率
 	float CameraLerpSpeed=1.0f;
 	// 目标镜头弹簧臂
@@ -98,6 +125,9 @@ protected:
 	UFUNCTION(BlueprintCallable,Category="Movement")
 	void Run();
 	void StopRunning();
+	// 测试函数
+	UFUNCTION(BlueprintCallable,Category="Test")
+	void TestFunction();
 	//蹲伏函数声明
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MyCrouch();

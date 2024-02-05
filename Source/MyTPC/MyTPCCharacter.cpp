@@ -17,6 +17,7 @@ AMyTPCCharacter::AMyTPCCharacter()
 {
 	// 初始枚举状态
 	CurrentState=Idle;
+	CurrentWeapon=Punch;
 	// 胶囊体体积设置
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	// 旋转值
@@ -275,5 +276,30 @@ void AMyTPCCharacter::UpdateCameraArmLength()
 
 
 
+/// 一般测试方法
+void AMyTPCCharacter::TestFunction()
+{
+	
+}
+
+CharacterState AMyTPCCharacter::GetCurrentState()
+{
+	return CurrentState;
+}
+
+void AMyTPCCharacter::SetCurrentState(CharacterState newStatue)
+{
+	CurrentState=newStatue;
+}
+
+WeaponType AMyTPCCharacter::GetCurrentWeapon()
+{
+	return CurrentWeapon;
+}
+
+void AMyTPCCharacter::SetCurrentWeapon(WeaponType newWeapon)
+{
+	CurrentWeapon=newWeapon;
+}
 
 
