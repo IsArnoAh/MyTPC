@@ -34,8 +34,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	//方法定义
+
+	
 	//血量
 	UFUNCTION(BlueprintCallable,Category="Health")
 	float IncreaseHealth(float IncreaseHealth);

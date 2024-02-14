@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "PlayerEnum.h"
 #include "Sys_Attack.generated.h"
 
 
@@ -15,9 +15,13 @@ class MYTPC_API USys_Attack : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	USys_Attack();
+	// 定义动画序列表
+	TArray<UAnimMontage*> SwrodAttackMontages;
+	TArray<UAnimMontage*> PunchAttackMontages;
+	
 	bool bCanAttack=true;
 	bool bAttacking=false;
-	int SwordAttackIndex=0;
+	int AttackIndex=0;
 
 protected:
 	// Called when the game starts
@@ -26,7 +30,11 @@ protected:
 public:	
 	// Called every frame
 	UFUNCTION(BlueprintCallable,Category="Attack_Sword")
-	int SwordAttack();
+	UAnimMontage* TestAttack(WeaponType HoldWeapon,AMyTPCCharacter* Character);
+
+	UFUNCTION(BlueprintCallable)
+	int AttackIndexChange(TArray<UAnimMontage*> tempAnimArray);
+	
 	UFUNCTION(BlueprintCallable,Category="Attack_Sword")
 	void ReSetSwordAttackIndex();
 	UFUNCTION(BlueprintCallable,Category="Attack_Sword")

@@ -17,7 +17,7 @@ AMyTPCCharacter::AMyTPCCharacter()
 {
 	// 初始枚举状态
 	CurrentState=Idle;
-	CurrentWeapon=Punch;
+	CurrentWeapon=Sword;
 	// 胶囊体体积设置
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	// 旋转值
@@ -277,8 +277,31 @@ void AMyTPCCharacter::UpdateCameraArmLength()
 
 
 /// 一般测试方法
-void AMyTPCCharacter::TestFunction()
+void AMyTPCCharacter::TestFunction(int attackIndex)
 {
+	Sys_Attack->ReSetSwordAttackIndex();
+}
+
+void AMyTPCCharacter::Attack()
+{
+	if (CurrentState==Idle || CurrentState==Walking || CurrentState==Running)
+	{
+		TArray<UAnimMontage*> currentAttackAnim;
+		switch (CurrentWeapon)
+		{
+		case Punch:currentAttackAnim=Sys_Attack->PunchAttackMontages;
+			break;
+		case Sword:currentAttackAnim=Sys_Attack->SwrodAttackMontages;
+			break;
+		case Gun:currentAttackAnim=Sys_Attack->SwrodAttackMontages;// 随意填充，以扩展后续更新攻击动画
+			break;
+		default:currentAttackAnim=Sys_Attack->PunchAttackMontages;// 随意填充，以扩展后续更新攻击动画
+			break;
+		}
+		PlayAnimMontage(currentAttackAnim[Sys_Attack->AttackIndexChange(currentAttackAnim)]);
+	}
+	else return;
+	
 	
 }
 

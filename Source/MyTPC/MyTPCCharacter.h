@@ -3,9 +3,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "MotionwarpingComponent.h"
-#include "PlayerValueComponent.h"
-#include "PlayerEnum.h"
-#include "Sys_Attack.h"
+#include "Player/PlayerValueComponent.h"
+#include "Player/PlayerEnum.h"
+#include "Player/Sys_Attack.h"
 #include "MyTPCCharacter.generated.h"
 
 // UENUM(BlueprintType)
@@ -82,17 +82,7 @@ public:
 	//计时器声明
 	FTimerHandle DelayedAttackHandle;
 
-	// get 和 set 方法
-	// 角色状态枚举
-	UFUNCTION(BlueprintCallable)
-	CharacterState GetCurrentState();
-	UFUNCTION(BlueprintCallable)
-	void SetCurrentState(CharacterState newStatue);
-	// 角色持有武器状态枚举
-	UFUNCTION(BlueprintCallable)
-	WeaponType GetCurrentWeapon();
-	UFUNCTION(BlueprintCallable)
-	void SetCurrentWeapon(WeaponType newWeapon);
+
 
 private:
 	// 状态枚举定义
@@ -115,6 +105,18 @@ private:
 protected:
 	
 	virtual void BeginPlay() override;
+
+	// get 和 set 方法
+	// 角色状态枚举
+	UFUNCTION(BlueprintCallable)
+	CharacterState GetCurrentState();
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentState(CharacterState newStatue);
+	// 角色持有武器状态枚举
+	UFUNCTION(BlueprintCallable)
+	WeaponType GetCurrentWeapon();
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentWeapon(WeaponType newWeapon);
 	
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
@@ -127,7 +129,11 @@ protected:
 	void StopRunning();
 	// 测试函数
 	UFUNCTION(BlueprintCallable,Category="Test")
-	void TestFunction();
+	void TestFunction(int attackIndex);
+
+	// 攻击函数
+	UFUNCTION(BlueprintCallable,Category="Attack")
+	void Attack();
 	//蹲伏函数声明
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MyCrouch();
