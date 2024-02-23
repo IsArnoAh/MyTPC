@@ -119,8 +119,6 @@ void AMyTPCCharacter::MoveForward(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		// 重置位置更新状态
 		AddMovementInput(Direction, Value);
-		// 重置更新攻击招数
-		Sys_Attack->ReSetSwordAttackIndex();
 	}
 }
 void AMyTPCCharacter::MoveRight(float Value)
@@ -134,8 +132,6 @@ void AMyTPCCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// 重置位置
 		AddMovementInput(Direction, Value);
-		//重置更新攻击招数
-		Sys_Attack->ReSetSwordAttackIndex();
 	}
 }
 
@@ -239,11 +235,11 @@ bool AMyTPCCharacter::UpdateJudgeVault()
 }
 
 /**
- * @brief 延迟攻击
+ * @brief 延迟攻击判定
  */
-void AMyTPCCharacter::DelayedSetAttacking()
+void AMyTPCCharacter::DelayedSetAttacking(float delayTime)
 {
-	GetWorld()->GetTimerManager().SetTimer(DelayedAttackHandle,this,&AMyTPCCharacter::SetAttacking,0.5f,false);
+	GetWorld()->GetTimerManager().SetTimer(DelayedAttackHandle,this,&AMyTPCCharacter::SetAttacking,delayTime,false);
 }
 
 void AMyTPCCharacter::SetAttacking()
@@ -276,17 +272,13 @@ void AMyTPCCharacter::UpdateCameraArmLength()
 
 
 
-/// 一般测试方法
-void AMyTPCCharacter::TestFunction(int attackIndex)
+// 攻击函数实现
+int AMyTPCCharacter::Attack()
 {
-	Sys_Attack->ReSetSwordAttackIndex();
-}
-
-void AMyTPCCharacter::Attack()
-{
-	if (CurrentState==Idle || CurrentState==Walking || CurrentState==Running)
+	if (CurrentState==Idle || CurrentState==Running || CurrentState==Walking)
 	{
 		TArray<UAnimMontage*> currentAttackAnim;
+		// 选择武器动画
 		switch (CurrentWeapon)
 		{
 		case Punch:currentAttackAnim=Sys_Attack->PunchAttackMontages;
@@ -298,13 +290,46 @@ void AMyTPCCharacter::Attack()
 		default:currentAttackAnim=Sys_Attack->PunchAttackMontages;// 随意填充，以扩展后续更新攻击动画
 			break;
 		}
-		PlayAnimMontage(currentAttackAnim[Sys_Attack->AttackIndexChange(currentAttackAnim)]);
+		if (!Sys_Attack->bAttacking)
+		{
+			int tempIndex=Sys_Attack->AttackIndexChange(currentAttackAnim);
+			PlayAnimMontage(currentAttackAnim[tempIndex]);
+			Sys_Attack->bAttacking=true;
+			if (tempIndex==0)
+			{
+				DelayedSetAttacking(4.0f);
+			}
+			else
+			{
+				DelayedSetAttacking(0.8f);
+			}
+			if (!bAttackTimerActive)
+			{
+				GetWorldTimerManager().SetTimer(ResetAttackIndexHandle, this, &AMyTPCCharacter::ReAttackTimer, 6.4f, false);
+				bAttackTimerActive = true;
+			}
+			return tempIndex;
+		}
 	}
-	else return;
-	
+	return 0;
+}
+
+/// 一般测试方法
+void AMyTPCCharacter::TestFunction()
+{
 	
 }
 
+// 攻击重置计时实现
+void AMyTPCCharacter::ReAttackTimer()
+{
+	bAttackTimerActive=false;
+	Sys_Attack->ReSetAttackIndex();
+}
+
+
+
+// get和set方法
 CharacterState AMyTPCCharacter::GetCurrentState()
 {
 	return CurrentState;

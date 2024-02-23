@@ -8,27 +8,6 @@
 #include "Player/Sys_Attack.h"
 #include "MyTPCCharacter.generated.h"
 
-// UENUM(BlueprintType)
-// enum CharacterState {
-// 	Idle,
-// 	Walking,
-// 	Running,
-// 	Crouching,
-// 	Vaulting,
-// 	Talking,
-// 	Shopping,
-// 	Attacking,
-// 	Assassinating,
-// 	Dead
-// };
-//
-// UENUM(BlueprintType)
-// enum WeaponType
-// {
-// 	Punch,
-// 	Sword,
-// 	Gun
-// };
 
 UCLASS(config=Game)
 class AMyTPCCharacter : public ACharacter
@@ -59,7 +38,7 @@ public:
 	bool bJudgeVault;
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool CanAssassin;
-
+	
 	//奔跑状态，蹲伏状态
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool bIsRun;
@@ -81,6 +60,7 @@ public:
 
 	//计时器声明
 	FTimerHandle DelayedAttackHandle;
+	FTimerHandle ResetAttackIndexHandle;
 
 
 
@@ -88,7 +68,7 @@ private:
 	// 状态枚举定义
 	CharacterState CurrentState;
 	WeaponType CurrentWeapon;
-	
+	bool bAttackTimerActive;
 	// 镜头移动速率
 	float CameraLerpSpeed=1.0f;
 	// 目标镜头弹簧臂
@@ -100,6 +80,8 @@ private:
 	FTimerHandle CameraMoveTimerHandle;
 	void UpdateArmLengthParameters(float TargetArmLength,float LerpSpeed);
 	void UpdateCameraArmLength();
+	// 攻击重置计时
+	void ReAttackTimer();
 
 
 protected:
@@ -129,11 +111,9 @@ protected:
 	void StopRunning();
 	// 测试函数
 	UFUNCTION(BlueprintCallable,Category="Test")
-	void TestFunction(int attackIndex);
+	void TestFunction();
 
-	// 攻击函数
-	UFUNCTION(BlueprintCallable,Category="Attack")
-	void Attack();
+	
 	//蹲伏函数声明
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MyCrouch();
@@ -145,12 +125,16 @@ protected:
 	//角色判断参数函数
 	UFUNCTION(BlueprintCallable, Category = "Judge")
 	bool UpdateJudgeVault();
+
+	// 攻击函数
+	UFUNCTION(BlueprintCallable,Category="Attack")
+	int Attack();
 	
 	UFUNCTION(BlueprintCallable, Category="Attack")
 	void SetAttacking();
 
 	UFUNCTION(BlueprintCallable,Category="Attack")
-	void DelayedSetAttacking();
+	void DelayedSetAttacking(float delayTime);
 	/** 
 	 * Called via input to turn at a given rate. 
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate

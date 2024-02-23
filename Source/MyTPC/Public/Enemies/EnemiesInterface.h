@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "Player/PlayerEnum.h"
 #include "EnemiesInterface.generated.h"
 
 // This class does not need to be modified.
@@ -25,4 +26,6 @@ public:
 	//背部暗杀函数
 	UFUNCTION(BlueprintCallable,BlueprintNativeEvent, Category = "Attacked")
 	void BackAssassin(FVector& RefLocation, FRotator& RefRotation);
+	UFUNCTION(BlueprintCallable,BlueprintNativeEvent, Category = "Attacked")
+	void BeAttacked(WeaponType PlayerWeapon,float damage,int attackIndex);
 };

@@ -11,7 +11,7 @@ USys_Attack::USys_Attack()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-	// 攻击动画序列填充
+	// 攻击动画序列填充-剑
 	SwrodAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/SwordAttack/Attack3_Montage.Attack3_Montage")));
 	SwrodAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/SwordAttack/Attack1_Montage.Attack1_Montage")));
 	SwrodAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/SwordAttack/Attack2_Montage.Attack2_Montage")));
@@ -25,9 +25,6 @@ void USys_Attack::BeginPlay()
 {
 	AttackIndex=0;
 	Super::BeginPlay();
-	
-	// ...
-	
 }
 
 
@@ -35,8 +32,6 @@ void USys_Attack::BeginPlay()
 void USys_Attack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 
@@ -50,39 +45,15 @@ int USys_Attack::AttackIndexChange(TArray<UAnimMontage*> tempAnimArray)
 	return AttackIndex;
 }
 
-// switch (AttackIndex)
-// 	{
-// 	case 0:
-// 		AttackIndex+=1;return 0;
-// 	case 1:
-// 		AttackIndex+=1;return 1;
-// 	case 2:
-// 		AttackIndex+=1;return 2;
-// 	case 3:
-// 		AttackIndex+=1;return 3;
-// 	default:AttackIndex=0;SwordAttack();return 0;
-// }
-
-
-
-void USys_Attack::ReSetSwordAttackIndex()
+// 重置攻击参数
+void USys_Attack::ReSetAttackIndex()
 {
 	AttackIndex=0;
 }
 
-bool USys_Attack::GetAttacking()
-{
-	return bAttacking;
-}
-
-void USys_Attack::IsAttacking()
-{
-	bAttacking=true;
-}
-
+// 测试攻击
 UAnimMontage* USys_Attack::TestAttack(WeaponType HoldWeapon, AMyTPCCharacter* Character)
 {
-	
 	UAnimMontage* MontageToPlay;
 	switch (HoldWeapon)
 	{
@@ -101,7 +72,6 @@ UAnimMontage* USys_Attack::TestAttack(WeaponType HoldWeapon, AMyTPCCharacter* Ch
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("this is a ScreenDebugMessage"));
 	}
-	
 	return MontageToPlay;
 }
 

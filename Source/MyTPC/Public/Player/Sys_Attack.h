@@ -18,6 +18,9 @@ public:
 	// 定义动画序列表
 	TArray<UAnimMontage*> SwrodAttackMontages;
 	TArray<UAnimMontage*> PunchAttackMontages;
+	TArray<UAnimMontage*> EnemiesAttackMontages;
+	TArray<UAnimMontage*> BeAttackedReact;
+	
 	
 	bool bCanAttack=true;
 	bool bAttacking=false;
@@ -36,10 +39,10 @@ public:
 	int AttackIndexChange(TArray<UAnimMontage*> tempAnimArray);
 	
 	UFUNCTION(BlueprintCallable,Category="Attack_Sword")
-	void ReSetSwordAttackIndex();
-	UFUNCTION(BlueprintCallable,Category="Attack_Sword")
+	void ReSetAttackIndex();
+	
 	bool GetAttacking();
-	UFUNCTION(BlueprintCallable,Category="Attack_Sword")
+	
 	void IsAttacking();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
