@@ -199,7 +199,7 @@ void AMyTPCCharacter::Jump()
  */
 void AMyTPCCharacter::MyCrouch()
 {
-	if (CurrentState==Idle || CurrentState==Walking || CurrentState==Running)
+	if (CurrentState==Idle || CurrentState==Walking || CurrentState==Running || CurrentState==Assassinating)
 	{
 		GetCharacterMovement()->MaxWalkSpeed=CrouchSpeed;
 		// 更新FollowCamera的位置

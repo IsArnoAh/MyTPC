@@ -21,16 +21,18 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="Enemies Config")
 	float Mental;UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="Enemies Config")
 	float Armor;
-
+	// 背部暗杀区域
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UBoxComponent* BackArea;
+	// 重定玩家骨骼点
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Component")
+	USkeletalMeshComponent* PlayerRef;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-
-
+	
 	//背部触发器判断
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
@@ -48,5 +50,11 @@ public:
 	UFUNCTION(BlueprintCallable,Category="Attacked")
 	//背部刺杀函数实现
 	virtual void BackAssassin_Implementation(FVector& RefLocation, FRotator& RefRotation) override;
-	
+
+	UFUNCTION(BlueprintCallable,Category="Attacked")
+	void EnterDeath();
+
+private:
+	// 延迟死亡计时器
+	FTimerHandle DelayedDeathHandle;
 };

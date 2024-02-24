@@ -4,10 +4,17 @@
 #include "Enemies/Enemies.h"
 #include "MyTPC/MyTPCCharacter.h"
 #include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AEnemies::AEnemies()
 {
+	// 创建 SkeletalMeshComponent 组件并附加到 RootComponent
+	PlayerRef = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
+	PlayerRef->SetupAttachment(RootComponent);
+	PlayerRef->SetRelativeLocation(FVector(-60,25,-90));
+	PlayerRef->SetRelativeRotation(FRotator(0,-90,0));
+	
  	BackArea=CreateDefaultSubobject<UBoxComponent>(TEXT("Back Area"));
 	BackArea->SetBoxExtent(FVector(50.f, 50.f, 50.f));
 	BackArea->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -39,25 +46,47 @@ void AEnemies::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+// 背部刺杀函数实现
 void AEnemies::BackAssassin_Implementation(FVector& RefLocation, FRotator& RefRotation)
 {
+	UAnimMontage* BeAssassinated=LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/Assassin/Assassined_Montage.Assassined_Montage"));
+	if (BeAssassinated != nullptr)
+	{
+		PlayAnimMontage(BeAssassinated);
+	}
+	RefLocation=PlayerRef->GetComponentTransform().GetLocation();
+	RefRotation=GetActorRotation();
 	IEnemiesInterface::BackAssassin_Implementation(RefLocation, RefRotation);
+	GetWorldTimerManager().SetTimer(DelayedDeathHandle, this, &AEnemies::EnterDeath, 2.0f, false);
+}
+
+// 角色进入死亡
+void AEnemies::EnterDeath()
+{
+	GetMesh()->SetSimulatePhysics(true);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	BackArea->DestroyComponent();
+	PlayerRef->DestroyComponent();
+	GetCapsuleComponent()->DestroyComponent();
+	GetMesh()->SetCollisionResponseToChannel(ECC_Pawn,ECR_Ignore);
 }
 
 
+// 刺杀区域进入
 void AEnemies::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                              int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor != nullptr && OtherActor->IsA<AMyTPCCharacter>())
 	{
 		if (AMyTPCCharacter* MyTPC = Cast<AMyTPCCharacter>(OtherActor))
 		{
-			MyTPC->CanAssassin=true;
+			
 		}
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Assassated Ready")));
 	}
 }
 
+// 刺杀区域退出
 void AEnemies::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex)
 {
@@ -65,7 +94,7 @@ void AEnemies::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 	{
 		if (AMyTPCCharacter* MyTPC = Cast<AMyTPCCharacter>(OtherActor))
 		{
-			MyTPC->CanAssassin=false;
+			
 		}
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Leave Assassted Zone")));
 	}
