@@ -71,6 +71,26 @@ void AEnemies::EnterDeath()
 	GetMesh()->SetCollisionResponseToChannel(ECC_Pawn,ECR_Ignore);
 }
 
+void AEnemies::BeAttacked_Implementation(WeaponType PlayerWeapon, float damage, int attackIndex)
+{
+	
+	UAnimMontage* BeAttackedAnim;
+	switch (attackIndex)
+	{
+	case 0:BeAttackedAnim=LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Right_Montage.HitReact_Right_Montage"));
+		break;
+	case 3:	BeAttackedAnim=LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Left_Montage.HitReact_Left_Montage"));
+		break;
+		default:BeAttackedAnim=LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Right_Montage.HitReact_Right_Montage"));
+	}
+	if (BeAttackedAnim != nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("this is a ScreenDebugMessage"));
+		PlayAnimMontage(BeAttackedAnim);
+	}
+	IEnemiesInterface::BeAttacked_Implementation(PlayerWeapon, damage, attackIndex);
+}
+
 
 // 刺杀区域进入
 void AEnemies::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,

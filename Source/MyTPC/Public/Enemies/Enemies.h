@@ -31,7 +31,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 	
 	//背部触发器判断
 	UFUNCTION()
@@ -50,6 +49,8 @@ public:
 	UFUNCTION(BlueprintCallable,Category="Attacked")
 	//背部刺杀函数实现
 	virtual void BackAssassin_Implementation(FVector& RefLocation, FRotator& RefRotation) override;
+
+	virtual void BeAttacked_Implementation(WeaponType PlayerWeapon, float damage, int attackIndex) override;
 
 	UFUNCTION(BlueprintCallable,Category="Attacked")
 	void EnterDeath();

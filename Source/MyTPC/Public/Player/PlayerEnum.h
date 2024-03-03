@@ -21,3 +21,14 @@ enum WeaponType
 	Sword,
 	Gun
 };
+
+UENUM(BlueprintType)
+enum CurrentLocation
+{
+	RealWorld,
+	DreamWorld,
+	BattleField,
+	SafeArea,
+	CG
+};
+
