@@ -26,6 +26,4 @@ public:
 	//背部暗杀函数
 	UFUNCTION(BlueprintCallable,BlueprintNativeEvent, Category = "Attacked")
 	void BackAssassin(FVector& RefLocation, FRotator& RefRotation);
-	UFUNCTION(BlueprintCallable,BlueprintNativeEvent, Category = "Attacked")
-	void BeAttacked(WeaponType PlayerWeapon,float damage,int attackIndex);
 };

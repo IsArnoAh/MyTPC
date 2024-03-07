@@ -5,7 +5,7 @@
 #include "MotionwarpingComponent.h"
 #include "Player/PlayerValueComponent.h"
 #include "Player/PlayerEnum.h"
-#include "Player/Sys_Attack.h"
+#include "Sys_Attack.h"
 #include "MyTPCCharacter.generated.h"
 
 

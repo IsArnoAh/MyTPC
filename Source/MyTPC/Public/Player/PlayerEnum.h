@@ -6,6 +6,7 @@ enum CharacterState {
 	Walking,
 	Running,
 	Crouching,
+	Jumping,
 	Vaulting,
 	Talking,
 	Shopping,

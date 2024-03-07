@@ -19,14 +19,14 @@ public:
 	//数值定义
 	//参数配置
 	float MaxHealth;
-	float CurrentHealth;
-	float CurrentXP;
 	float MaxXP;
 	float MaxMental;
+	float CurrentHealth;
+	float CurrentXP;
 	float CurrentMental;
-	int Level;
-	int SkillPoints;
-	int Money;
+	float CurrentDamage;
+	int CurrentLevel;
+	int MaxLevel;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -35,6 +35,16 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	//方法定义
+	UFUNCTION(BlueprintCallable,Category="ValueConfig")
+	void FirstGameValueConfig();
+	UFUNCTION(BlueprintCallable,Category="ValueConfig")
+	void LoadGameValueConfig(float currentHealth,float currentXP,float currentMental,float currentDamage,int currentLevel);
+
+	UFUNCTION(BlueprintCallable,Category="ValueCOnfig")
+	void IncreaseMaxHealth();
+	UFUNCTION(BlueprintCallable,Category="ValueCOnfig")
+	void IncreaseDamage(float increaseValue);
+
 	//血量
 	UFUNCTION(BlueprintCallable,Category="Health")
 	float IncreaseHealth(float IncreaseHealth);
@@ -53,10 +63,6 @@ public:
 	UFUNCTION(BlueprintCallable,Category="Mental")
 	float DecreaseMental(float DecreaseMental);
 
-	//金钱
-	UFUNCTION(BlueprintCallable,Category="Money")
-	int SpendMoney(int SpendNum);
-	UFUNCTION(BlueprintCallable,Category="Money")
-	int EarnMoney(int EarnNum);
-	
+	UFUNCTION(BlueprintCallable,Category="Damage")
+	float GetCurrentDamage();
 };

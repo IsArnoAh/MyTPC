@@ -112,6 +112,14 @@ void AMyTPCCharacter::MoveForward(float Value)
 {
 	if ((Controller != nullptr) && (Value != 0.0f))
 	{
+		if (bIsCrouch || CurrentState==Running)
+		{
+			
+		}
+		else
+		{
+			CurrentState=Walking;
+		}
 		// 定位向前向量
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -125,6 +133,14 @@ void AMyTPCCharacter::MoveRight(float Value)
 {
 	if ( (Controller != nullptr) && (Value != 0.0f) )
 	{
+		if (bIsCrouch || CurrentState==Running)
+		{
+			
+		}
+		else
+		{
+			CurrentState=Walking;
+		}
 		// 定位向右向量
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -144,6 +160,7 @@ void AMyTPCCharacter::Run()
 	{
 		FVector ZeroVector(0.0f, 0.0f, 0.0f);
 		FVector IsVector(RootComponent->GetComponentVelocity());
+		CurrentState=Running;
 		if (IsVector!=ZeroVector)
 		{
 			GetCharacterMovement()->MaxWalkSpeed=RunSpeed;
@@ -151,11 +168,11 @@ void AMyTPCCharacter::Run()
 			bIsCrouch=false;
 			Standing=true;
 			UpdateArmLengthParameters(250.0f,0.8f);
-			CurrentState=Running;
 		}
 		else 
 		{
 			StopRunning();
+			CurrentState=Walking;
 		}
 	}
 }
@@ -178,9 +195,11 @@ void AMyTPCCharacter::Jump()
 	Super::Jump();
 	if (CurrentState==Running || CurrentState==Walking)
 	{
+		
 		if (CurrentState==Running)
 		{
 			GetCharacterMovement()->JumpZVelocity = RunJumpZVelocity;
+			CurrentState=Jumping;
 		}
 		else
 		{
@@ -259,8 +278,6 @@ void AMyTPCCharacter::UpdateArmLengthParameters(float TargetArmLength,float Lerp
 	GetWorldTimerManager().SetTimer(CameraMoveTimerHandle, this, &AMyTPCCharacter::UpdateCameraArmLength, 0.01f, true);
 }
 
-
-
 /**
  * @brief 更新弹簧臂
  */
@@ -269,8 +286,6 @@ void AMyTPCCharacter::UpdateCameraArmLength()
 	float CurrentArmLength = CameraBoom->TargetArmLength;
 	CameraBoom->TargetArmLength = FMath::FInterpTo(CurrentArmLength, CameraTargetArmLength, GetWorld()->GetDeltaSeconds(), CameraLerpSpeed);
 }
-
-
 
 // 攻击函数实现
 int AMyTPCCharacter::Attack()

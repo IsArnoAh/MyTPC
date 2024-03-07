@@ -2,13 +2,17 @@
 
 
 #include "Enemies/Enemies.h"
-#include "MyTPC/MyTPCCharacter.h"
+// #include "MyTPC/MyTPCCharacter.h"
+#include "Sys_Attack.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
 AEnemies::AEnemies()
 {
+	//创建战斗组件
+	 Sys_Attack=CreateDefaultSubobject<USys_Attack>(TEXT("Enemies_Combat"));
+	
 	// 创建 SkeletalMeshComponent 组件并附加到 RootComponent
 	PlayerRef = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
 	PlayerRef->SetupAttachment(RootComponent);
@@ -24,10 +28,9 @@ AEnemies::AEnemies()
 	BackArea->SetupAttachment(RootComponent);
 	//基础配置
 	Health=100.0f;
-	Mental=100.0f;
-	Armor=100.0f;
-	BackArea->OnComponentBeginOverlap.AddDynamic(this, &AEnemies::OnOverlapBegin);
-	BackArea->OnComponentEndOverlap.AddDynamic(this,&AEnemies::AEnemies::OnOverlapEnd);
+	Level=FMath::RandRange(1,10);
+	Damage=Level*0.5;
+	
 	
 }
 
@@ -35,7 +38,6 @@ AEnemies::AEnemies()
 void AEnemies::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 
@@ -43,7 +45,6 @@ void AEnemies::BeginPlay()
 void AEnemies::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 // 背部刺杀函数实现
@@ -69,56 +70,47 @@ void AEnemies::EnterDeath()
 	PlayerRef->DestroyComponent();
 	GetCapsuleComponent()->DestroyComponent();
 	GetMesh()->SetCollisionResponseToChannel(ECC_Pawn,ECR_Ignore);
+	bIsDead=true;
 }
 
-void AEnemies::BeAttacked_Implementation(WeaponType PlayerWeapon, float damage, int attackIndex)
-{
-	
-	UAnimMontage* BeAttackedAnim;
-	switch (attackIndex)
-	{
-	case 0:BeAttackedAnim=LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Right_Montage.HitReact_Right_Montage"));
-		break;
-	case 3:	BeAttackedAnim=LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Left_Montage.HitReact_Left_Montage"));
-		break;
-		default:BeAttackedAnim=LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Right_Montage.HitReact_Right_Montage"));
-	}
-	if (BeAttackedAnim != nullptr)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("this is a ScreenDebugMessage"));
-		PlayAnimMontage(BeAttackedAnim);
-	}
-	IEnemiesInterface::BeAttacked_Implementation(PlayerWeapon, damage, attackIndex);
-}
+// // 角色被攻击
+// void AEnemies::BeAttacked_Implementation(WeaponType playerWeapon, float damage, int attackIndex)
+// {
+// 	UAnimMontage* BeAttackedAnim;
+// 	switch (attackIndex)
+// 	{
+// 	case 0:BeAttackedAnim=LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Right_Montage.HitReact_Right_Montage"));
+// 		break;
+// 	case 3:	BeAttackedAnim=LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Left_Montage.HitReact_Left_Montage"));
+// 		break;
+// 		default:BeAttackedAnim=LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Right_Montage.HitReact_Right_Montage"));
+// 	}
+// 	if (BeAttackedAnim != nullptr)
+// 	{
+// 		Health-=damage;
+// 		PlayAnimMontage(BeAttackedAnim);
+// 		if (Health<=0)
+// 		{
+// 			EnterDeath();
+// 		}
+// 	}
+// 	IEnemiesInterface::BeAttacked_Implementation(playerWeapon, damage, attackIndex);
+// }
 
-
-// 刺杀区域进入
-void AEnemies::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-                              int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+// 新攻击反馈
+void AEnemies::BeAttacked(WeaponType holdWeapon, float takeDamage)
 {
-	if (OtherActor != nullptr && OtherActor->IsA<AMyTPCCharacter>())
+	if (!bIsDead)
 	{
-		if (AMyTPCCharacter* MyTPC = Cast<AMyTPCCharacter>(OtherActor))
+		Health-=takeDamage;
+		Sys_Attack->BeAttacked(this);
+		if (Health<=0)
 		{
-			
+			EnterDeath();
 		}
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Assassated Ready")));
 	}
 }
 
-// 刺杀区域退出
-void AEnemies::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex)
-{
-	if (OtherActor != nullptr && OtherActor->IsA<AMyTPCCharacter>())
-	{
-		if (AMyTPCCharacter* MyTPC = Cast<AMyTPCCharacter>(OtherActor))
-		{
-			
-		}
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString(TEXT("Leave Assassted Zone")));
-	}
-}
 
 
 

@@ -18,16 +18,6 @@ UPlayerValueComponent::UPlayerValueComponent()
 void UPlayerValueComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	//初级参数设置
-	Level=1;
-	CurrentHealth=100.0f;
-	CurrentXP=0;
-	CurrentMental=200;
-	MaxMental=400;
-	MaxHealth=100.0f;
-	MaxXP=100.0f;
-	// ...
-	
 }
 
 
@@ -40,9 +30,53 @@ void UPlayerValueComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	// ...
 }
 
+/**
+ * @brief 第一次游戏参数加载
+ */
+void UPlayerValueComponent::FirstGameValueConfig()
+{
+	//初级参数设置
+	CurrentLevel=1;
+	CurrentHealth=100.0f;
+	CurrentXP=0;
+	CurrentMental=200;
+	CurrentDamage=10;
+	MaxMental=400;
+	MaxHealth=100.0f;
+	MaxXP=100.0f;
+}
+
+/**
+ * @brief 
+ * @param currentHealth 血量
+ * @param currentXP 经验
+ * @param currentMental 精神
+ * @param currentDamage 伤害
+ * @param currentLevel 等级
+ */
+void UPlayerValueComponent::LoadGameValueConfig(float currentHealth, float currentXP, float currentMental,
+                                                float currentDamage, int currentLevel)
+{
+	CurrentHealth=currentHealth;
+	CurrentXP=currentXP;
+	CurrentMental=currentMental;
+	CurrentDamage=currentDamage;
+	CurrentLevel=currentLevel;
+}
+
+// 增加血量上限
+void UPlayerValueComponent::IncreaseMaxHealth()
+{
+	MaxHealth+=50;
+}
+// 增加基础攻击伤害
+void UPlayerValueComponent::IncreaseDamage(float increaseValue)
+{
+	CurrentDamage+=increaseValue;
+}
 
 
-//血量增减和死亡判定
+//血量增减
 float UPlayerValueComponent::IncreaseHealth(float IncreaseHealth)
 {
 	CurrentHealth+=IncreaseHealth;
@@ -75,8 +109,7 @@ void UPlayerValueComponent::IncreaseXP(float IncreaseXP)
 }
 void UPlayerValueComponent::IncreaseLevel()
 {
-	Level++;
-	SkillPoints++;
+	CurrentLevel++;
 }
 
 //精神值
@@ -85,22 +118,18 @@ float UPlayerValueComponent::IncreaseMental(float IncreaseMental)
 	CurrentMental+=IncreaseMental;
 	return CurrentMental/MaxMental;
 }
-
 float UPlayerValueComponent::DecreaseMental(float DecreaseMental)
 {
 	CurrentMental-=DecreaseMental;
 	return CurrentMental/MaxMental;
 }
 
-int UPlayerValueComponent::SpendMoney(int SpendNum)
+// 获取当前伤害值
+float UPlayerValueComponent::GetCurrentDamage()
 {
-	return Money-=SpendNum;
+	return CurrentDamage;
 }
 
-int UPlayerValueComponent::EarnMoney(int EarnNum)
-{
-	return Money+=EarnNum;
-}
 
 
 
