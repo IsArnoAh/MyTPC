@@ -1,16 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Sys_Attack.h"
-
 #include "MyTPC/MyTPCCharacter.h"
 
 // Sets default values for this component's properties
 USys_Attack::USys_Attack()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
+}
+
+
+// Called when the game starts
+void USys_Attack::BeginPlay()
+{
 	// 攻击动画序列填充-剑
 	SwrodAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/SwordAttack/Attack3_Montage.Attack3_Montage")));
 	SwrodAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/SwordAttack/Attack1_Montage.Attack1_Montage")));
@@ -26,13 +28,7 @@ USys_Attack::USys_Attack()
 	// 受攻击动画填充
 	BeAttackedReact.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Right_Montage.HitReact_Right_Montage")));
 	BeAttackedReact.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Left_Montage.HitReact_Left_Montage")));
-	
-}
-
-
-// Called when the game starts
-void USys_Attack::BeginPlay()
-{
+	// 攻击索引默认
 	AttackIndex=0;
 	Super::BeginPlay();
 }
@@ -71,6 +67,7 @@ void USys_Attack::BeAttacked(ACharacter* Character)
 	// 随机播放攻击动画
 	int RandIndex=FMath::RandRange(0,1);
 	Character->PlayAnimMontage(BeAttackedReact[RandIndex]);
+	
 }
 
 
