@@ -51,6 +51,9 @@ public:
 	UFUNCTION(BlueprintCallable,Category="Attacked")
 	void BeAttacked(WeaponType HoldWeapon,float Damage);
 
+	UFUNCTION(BlueprintCallable)
+	bool IsDead();
+
 private:
 	// 延迟死亡计时器
 	FTimerHandle DelayedDeathHandle;

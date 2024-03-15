@@ -20,14 +20,14 @@ void USys_Attack::BeginPlay()
 	SwrodAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/SwordAttack/Kick_Montage.Kick_Montage")));
 
 	// 攻击动画序列填充-拳头
-	PunchAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/SwordAttack/Attack3_Montage.Attack3_Montage")));
-	PunchAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/SwordAttack/Attack1_Montage.Attack1_Montage")));
-	PunchAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/SwordAttack/Attack2_Montage.Attack2_Montage")));
-	PunchAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/SwordAttack/Kick_Montage.Kick_Montage")));
+	PunchAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/Punching/MmaKick_UE_Montage.MmaKick_UE_Montage")));
+	PunchAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/Punching/Punching_L_Montage.Punching_L_Montage")));
+	PunchAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/Punching/Punching_R_Montage.Punching_R_Montage")));
+	PunchAttackMontages.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/Punching/Punching_kick_Montage.Punching_kick_Montage")));
 	
 	// 受攻击动画填充
-	BeAttackedReact.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Right_Montage.HitReact_Right_Montage")));
-	BeAttackedReact.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/HitReact_Left_Montage.HitReact_Left_Montage")));
+	BeAttackedReact.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/React/HitReact_Right_Montage.HitReact_Right_Montage")));
+	BeAttackedReact.Add(LoadObject<UAnimMontage>(nullptr,TEXT("/Game/Extra/RPG_Animation/Combat/React/HitReact_Left_Montage.HitReact_Left_Montage")));
 	// 攻击索引默认
 	AttackIndex=0;
 	Super::BeginPlay();

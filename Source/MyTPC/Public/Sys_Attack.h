@@ -36,7 +36,8 @@ public:
 	void BeAttacked(ACharacter* Character);
 	
 	int AttackIndexChange(TArray<UAnimMontage*> tempAnimArray);
-	
+
+	UFUNCTION(BlueprintCallable)
 	void ReSetAttackIndex();
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

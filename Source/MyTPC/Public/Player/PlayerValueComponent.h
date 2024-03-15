@@ -11,13 +11,6 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MYTPC_API UPlayerValueComponent : public UActorComponent
 {
 	GENERATED_BODY()
-
-public:
-	
-	// Sets default values for this component's properties
-	UPlayerValueComponent();
-	//数值定义
-	//参数配置
 	float MaxHealth;
 	float MaxXP;
 	float MaxMental;
@@ -27,6 +20,7 @@ public:
 	float CurrentDamage;
 	int CurrentLevel;
 	int MaxLevel;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -34,6 +28,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UPlayerValueComponent();
 	//方法定义
 	UFUNCTION(BlueprintCallable,Category="ValueConfig")
 	void FirstGameValueConfig();

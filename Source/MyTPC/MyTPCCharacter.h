@@ -6,6 +6,8 @@
 #include "Player/PlayerValueComponent.h"
 #include "Player/PlayerEnum.h"
 #include "Sys_Attack.h"
+#include "GameSaves.h"
+#include "GameManager.h"
 #include "MyTPCCharacter.generated.h"
 
 
@@ -23,16 +25,11 @@ class AMyTPCCharacter : public ACharacter
 	
 public:
 	AMyTPCCharacter();
+	GameManager Gm;
 	
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Input)
 	float TurnRateGamepad;
-	
-	//判定参数
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// CharacterState CurrentState;
-	//
-	// WeaponType Weapon;
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool bJudgeVault;
@@ -61,7 +58,13 @@ public:
 	//计时器声明
 	FTimerHandle DelayedAttackHandle;
 	FTimerHandle ResetAttackIndexHandle;
-
+	
+	// 测试函数
+	UFUNCTION(BlueprintCallable,Category="Test")
+	void TestFunction();
+	// 读取存档
+	UFUNCTION(BlueprintCallable,Category="Value")
+	void LoadValueConfig();
 
 
 private:
@@ -109,10 +112,6 @@ protected:
 	UFUNCTION(BlueprintCallable,Category="Movement")
 	void Run();
 	void StopRunning();
-	// 测试函数
-	UFUNCTION(BlueprintCallable,Category="Test")
-	void TestFunction();
-
 	
 	//蹲伏函数声明
 	UFUNCTION(BlueprintCallable, Category = "Movement")
@@ -154,7 +153,7 @@ protected:
 	UMotionWarpingComponent* MotionWarpingComponent;
 	//角色组件
 	UPROPERTY(BlueprintReadWrite,Category="Value")
-	UPlayerValueComponent* PlayerValueComponent;
+	UPlayerValueComponent* PlayerValue;
 	UPROPERTY(BlueprintReadWrite,Category="Attack")
 	USys_Attack* Sys_Attack;
 	

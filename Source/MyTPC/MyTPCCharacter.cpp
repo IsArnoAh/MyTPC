@@ -17,7 +17,7 @@ AMyTPCCharacter::AMyTPCCharacter()
 {
 	// 初始枚举状态
 	CurrentState=Idle;
-	CurrentWeapon=Sword;
+	CurrentWeapon=Punch;
 	// 胶囊体体积设置
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	// 旋转值
@@ -54,7 +54,7 @@ AMyTPCCharacter::AMyTPCCharacter()
 	// 创建MotionWarpingComponent组件实例
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	//创建数值组件;
-	 PlayerValueComponent = CreateDefaultSubobject<UPlayerValueComponent>(TEXT("PlayerValueComponent"));
+	 PlayerValue = CreateDefaultSubobject<UPlayerValueComponent>(TEXT("PlayerValue"));
 	//创建战斗组件
 	Sys_Attack=CreateDefaultSubobject<USys_Attack>(TEXT("SysAttack"));
 	
@@ -332,8 +332,9 @@ int AMyTPCCharacter::Attack()
 /// 一般测试方法
 void AMyTPCCharacter::TestFunction()
 {
-	
+	Gm.SaveGame();
 }
+
 
 // 攻击重置计时实现
 void AMyTPCCharacter::ReAttackTimer()
@@ -342,6 +343,21 @@ void AMyTPCCharacter::ReAttackTimer()
 	Sys_Attack->ReSetAttackIndex();
 }
 
+
+void AMyTPCCharacter::LoadValueConfig()
+{
+	UGameSaves *LoadGameSaves=Gm.LoadGame(TEXT("Saves_1"),1);
+	if (LoadGameSaves)
+	{
+		FString TempFstring=FString::Printf(TEXT("the Savename is %s"),*LoadGameSaves->SaveSlotName);
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::White,TempFstring);
+	}
+	else
+	{
+		FString TempFstring=FString::Printf(TEXT("nope saves"));
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::White,TempFstring);
+	}
+}
 
 
 // get和set方法

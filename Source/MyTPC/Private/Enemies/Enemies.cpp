@@ -111,6 +111,11 @@ void AEnemies::BeAttacked(WeaponType holdWeapon, float takeDamage)
 	}
 }
 
+bool AEnemies::IsDead()
+{
+	return bIsDead;
+}
+
 
 
 

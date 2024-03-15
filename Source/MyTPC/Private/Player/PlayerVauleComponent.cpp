@@ -9,7 +9,14 @@ UPlayerValueComponent::UPlayerValueComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-	
+	CurrentLevel=1;
+	CurrentHealth=100.0f;
+	CurrentXP=0;
+	CurrentMental=200;
+	CurrentDamage=10;
+	MaxMental=400;
+	MaxHealth=100.0f;
+	MaxXP=100.0f;
 	// ...
 }
 
@@ -18,6 +25,7 @@ UPlayerValueComponent::UPlayerValueComponent()
 void UPlayerValueComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 
