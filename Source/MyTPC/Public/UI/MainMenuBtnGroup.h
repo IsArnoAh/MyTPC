@@ -3,10 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
-#include "Player//PlayerValueComponent.h"
-#include "MyTPC/MyTPCCharacter.h"
+#include "GameManager.h"
 #include "Components/Button.h"
 #include "Components/VerticalBox.h"
 #include "MainMenuBtnGroup.generated.h"
@@ -18,9 +16,13 @@ class MYTPC_API UMainMenuBtnGroup : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	// 游戏管理类声明
+	GameManager* Gm;
 	
-	UPROPERTY(BlueprintReadWrite);
-	AMyTPCCharacter* MyPlayer;
+	TArray<FString> SaveSlots;
+	
+	TArray<FString> SlotsDate;
+	// UI绑定
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,meta=(BindWidget))
 	UVerticalBox* VerticalBox;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="ButtonGroup",meta=(BindWidget))
@@ -32,13 +34,12 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="ButtonGroup",meta=(BindWidget))
 	UButton* Btn_ExitGame;
 
-public:
 	// 新游戏
 	UFUNCTION(BlueprintCallable)
 	void NewGame();
 	// 异步加载地图
-	void LoadLevelAsync(FName LevelName);
-	//
+	void LoadLevelAsync(FName LevelName) const;
+	// 加载游戏方法
 	UFUNCTION(BlueprintCallable)
 	void LoadGame();
 	UMainMenuBtnGroup(const FObjectInitializer& ObjectInitializer);

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include "Player/PlayerValueComponent.h"
 #include "GameSaves.generated.h"
 
 /**
@@ -23,5 +24,17 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	FString SaveSlotName=TEXT("save");
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	FName GameMap;
+
+	UPROPERTY(VisibleAnywhere,Category = Basic)
+	FVector PlayerLocation;
+
+	UPROPERTY(VisibleAnywhere,Category = Basic)
+	FString SaveDate;
+	
+	UPROPERTY(VisibleAnywhere,Category="PlayerValue")
+	UPlayerValueComponent* PlayerValue;
 	
 };

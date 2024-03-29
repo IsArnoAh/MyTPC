@@ -66,6 +66,22 @@ public:
 	UFUNCTION(BlueprintCallable,Category="Value")
 	void LoadValueConfig();
 
+	// get和set方法
+	// 角色状态枚举
+	UFUNCTION(BlueprintCallable)
+	CharacterState GetCurrentState();
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentState(CharacterState newStatue);
+	
+	// 角色持有武器状态枚举
+	UFUNCTION(BlueprintCallable)
+	WeaponType GetCurrentWeapon();
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentWeapon(WeaponType newWeapon);
+	
+	// 玩家数值
+	UFUNCTION(BlueprintCallable)
+	UPlayerValueComponent* GetPlayerValue();
 
 private:
 	// 状态枚举定义
@@ -82,26 +98,17 @@ private:
 	// 镜头移动计时器声明
 	FTimerHandle CameraMoveTimerHandle;
 	void UpdateArmLengthParameters(float TargetArmLength,float LerpSpeed);
-	void UpdateCameraArmLength();
+	void UpdateCameraArmLength() const;
 	// 攻击重置计时
 	void ReAttackTimer();
 
+
+	
 
 protected:
 	
 	virtual void BeginPlay() override;
 
-	// get 和 set 方法
-	// 角色状态枚举
-	UFUNCTION(BlueprintCallable)
-	CharacterState GetCurrentState();
-	UFUNCTION(BlueprintCallable)
-	void SetCurrentState(CharacterState newStatue);
-	// 角色持有武器状态枚举
-	UFUNCTION(BlueprintCallable)
-	WeaponType GetCurrentWeapon();
-	UFUNCTION(BlueprintCallable)
-	void SetCurrentWeapon(WeaponType newWeapon);
 	
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);

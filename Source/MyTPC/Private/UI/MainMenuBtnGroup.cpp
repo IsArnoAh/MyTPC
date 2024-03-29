@@ -3,6 +3,7 @@
 
 #include "UI/MainMenuBtnGroup.h"
 
+
 // 构造函数
 UMainMenuBtnGroup::UMainMenuBtnGroup(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
 {
@@ -11,6 +12,12 @@ UMainMenuBtnGroup::UMainMenuBtnGroup(const FObjectInitializer& ObjectInitializer
 // 组件生成构造函数
 void UMainMenuBtnGroup::NativeConstruct()
 {
+	// if (Btn_LoadGame)
+	// {
+	// 	FScriptDelegate LoadGame;
+	// 	LoadGame.BindUFunction(this, "LoadGame");
+	// 	Btn_LoadGame->OnClicked.Add(LoadGame);
+	// }
 	
 	Super::NativeConstruct();
 }
@@ -20,7 +27,7 @@ void UMainMenuBtnGroup::NativeConstruct()
  */
 void UMainMenuBtnGroup::NewGame()
 {
-	FName LevelName = FName("Map_Tutorial"); // 替换为你想要加载的关卡名称
+	const FName LevelName = FName("Map_Tutorial"); // 加载的关卡名称
 	FSimpleDelegateGraphTask::CreateAndDispatchWhenReady(
 		FSimpleDelegateGraphTask::FDelegate::CreateUObject(this, &UMainMenuBtnGroup::LoadLevelAsync, LevelName),
 		TStatId(),
@@ -33,9 +40,12 @@ void UMainMenuBtnGroup::NewGame()
  * @brief 
  * @param LevelName 异步加载打开关卡
  */
-void UMainMenuBtnGroup::LoadLevelAsync(FName LevelName)
+void UMainMenuBtnGroup::LoadLevelAsync(FName LevelName) const
 {
-	UGameplayStatics::OpenLevel(this, LevelName, true, FString("Map_Tutorial")); // 加载关卡
+	//Gm->CurrentSaveIndex=0;
+	Gm->SaveGame();
+	
+	UGameplayStatics::OpenLevel(this, LevelName, true, LevelName.ToString()); // 加载关卡
 }
 
 /**
@@ -43,5 +53,7 @@ void UMainMenuBtnGroup::LoadLevelAsync(FName LevelName)
  */
 void UMainMenuBtnGroup::LoadGame()
 {
-	
+	const FString DirectoryPath = "Saved/SaveGames";
+	Gm->UpDateSlotsDetail();
+	//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Loading"));
 }

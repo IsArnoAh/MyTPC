@@ -104,7 +104,6 @@ float UPlayerValueComponent::DecreaseHealth(float DecreaseHealth)
 	return CurrentHealth/MaxHealth;
 }
 
-
 //经验与等级
 void UPlayerValueComponent::IncreaseXP(float IncreaseXP)
 {

@@ -24,12 +24,19 @@ enum WeaponType
 };
 
 UENUM(BlueprintType)
-enum CurrentLocation
+enum AreaStatue
 {
 	RealWorld,
 	DreamWorld,
 	BattleField,
 	SafeArea,
+};
+
+UENUM(BlueprintType)
+enum GameStatue
+{
+	Pause,
+	Gaming,
 	CG
 };
 
