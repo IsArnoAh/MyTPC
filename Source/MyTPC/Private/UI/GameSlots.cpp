@@ -24,7 +24,7 @@ void UGameSlots::NativeConstruct()
  */
 void UGameSlots::LoadGame(FString selectSlotName)
 {
-	Gm->SelectLoadGame(selectSlotName, 0);
+	Gm->SetLoadSlotDetail(selectSlotName,0);
 	//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, SlotName->GetText().ToString());
 	if (const UGameSaves* LoadGameSaves = Gm->SelectLoadGame(selectSlotName, 0))
 	{

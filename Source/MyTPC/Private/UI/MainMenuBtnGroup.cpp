@@ -27,6 +27,7 @@ void UMainMenuBtnGroup::NativeConstruct()
  */
 void UMainMenuBtnGroup::NewGame()
 {
+	Gm->bSelectSave=false;
 	Gm->UpDateSlotsDetail();
 	Gm->SaveGame();
 	const FName LevelName = FName("Map_Tutorial"); // 加载的关卡名称

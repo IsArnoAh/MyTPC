@@ -13,7 +13,6 @@ TArray<FSlotsDetail> GameManager::UpDateSlotsDetail()
 	const FString SaveGamesDirectory = FPaths::ProjectSavedDir() + TEXT("SaveGames");
 	TArray<FString> SaveFiles;
 	PlatformFile.FindFiles(SaveFiles, *SaveGamesDirectory, TEXT(".sav"));
-	CurrentSaveIndex=SlotsDetails.Max();
 	if (SaveFiles.Num() <= 0) return SlotsDetails;
 	for (const FString& GamesDirectory : SaveFiles)
 	{
@@ -22,7 +21,7 @@ TArray<FSlotsDetail> GameManager::UpDateSlotsDetail()
 			FPaths::GetBaseFilename(GamesDirectory),
 			FileCreationTime.ToString()
 		};
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, SlotDetail.SlotName);
+		//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, SlotDetail.SlotName);
 		SlotsDetails.Add(SlotDetail);
 	}
 	return SlotsDetails;
@@ -52,6 +51,7 @@ void GameManager::SaveGame()
 			// 更新当前存档索引
 			CurrentSaveIndex = (CurrentSaveIndex + 1) % MaxSaveSlots;
 		}
+		
 	}
 }
 
@@ -121,7 +121,7 @@ UGameSaves* GameManager::SelectLoadGame(const FString& slotName, int32 userIndex
  */
 UGameSaves* GameManager::LoadLastGame()
 {
-	const int preIndex = CurrentSaveIndex - 1;
+	const int preIndex = CurrentSaveIndex;
 	const FString SaveSlotName = FString::Printf(TEXT("Saves_%d"), preIndex);
 	if (UGameSaves* LoadedGame = Cast<UGameSaves>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0)))
 	{

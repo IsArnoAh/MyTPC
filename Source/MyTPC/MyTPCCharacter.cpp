@@ -352,16 +352,19 @@ int AMyTPCCharacter::Attack()
  */
 void AMyTPCCharacter::TestFunction()
 {
+	
 	const FString MapNameWithPrefix = GetWorld()->GetMapName();
 	const FString MapName = MapNameWithPrefix.Mid(MapNameWithPrefix.Find("_") + 3);
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, MapName);
 	const FDateTime CurrentTime = FDateTime::Now();
 	const FString TimeString = CurrentTime.ToString(TEXT("%Y-%m-%d %H:%M:%S"));
 	const FVector currentLocation=GetActorLocation();
+	FString TempFstring=FString::Printf(TEXT("the Vector is %s"),*currentLocation.ToString());
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TempFstring);
 	Gm.GamingSaveGame(*MapName,currentLocation,TimeString,PlayerValue);
 	//FString temStr=TEXT("地图名称:%s,当前时间%s",MapFName.ToString(),TimeString);
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Save"));
+	
 }
 
 /**
@@ -383,6 +386,10 @@ void AMyTPCCharacter::LoadValueConfig()
 		if (const UGameSaves* LoadGameSaves = Gm.SelectLoadGame(Gm.GetSelectSlotName(), Gm.GetUserIndex()))
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::White,TEXT("be select"));
+			SetActorLocation(LoadGameSaves->PlayerLocation);
+		}else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::White,TEXT("no save"));
 		}
 	}
 	else
@@ -391,7 +398,9 @@ void AMyTPCCharacter::LoadValueConfig()
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::White,TEXT("last Game"));
 		}
+		
 	}
+	Gm.UpDateSlotsDetail();
 }
 
 // get和set方法
