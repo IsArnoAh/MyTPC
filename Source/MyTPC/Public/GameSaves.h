@@ -26,10 +26,10 @@ public:
 	FString SaveSlotName=TEXT("save");
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
-	FName GameMap;
+	FName GameMap=TEXT("Map_Tutorial");
 
 	UPROPERTY(VisibleAnywhere,Category = Basic)
-	FVector PlayerLocation;
+	FVector PlayerLocation=FVector(0,0,0);
 
 	UPROPERTY(VisibleAnywhere,Category = Basic)
 	FString SaveDate;

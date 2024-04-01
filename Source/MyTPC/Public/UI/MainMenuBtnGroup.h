@@ -42,6 +42,8 @@ public:
 	// 加载游戏方法
 	UFUNCTION(BlueprintCallable)
 	void LoadGame();
+	// 构造函数
 	UMainMenuBtnGroup(const FObjectInitializer& ObjectInitializer);
 	virtual void NativeConstruct() override;
+	
 };

@@ -6,13 +6,15 @@ TArray<FSlotsDetail> GameManager::SlotsDetails;//存档结构队列
 /**
  * @brief 更新存档队列
  */
-void GameManager::UpDateSlotsDetail()
+TArray<FSlotsDetail> GameManager::UpDateSlotsDetail()
 {
+	SlotsDetails.Empty();
 	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 	const FString SaveGamesDirectory = FPaths::ProjectSavedDir() + TEXT("SaveGames");
 	TArray<FString> SaveFiles;
 	PlatformFile.FindFiles(SaveFiles, *SaveGamesDirectory, TEXT(".sav"));
-	if (SaveFiles.Num() <= 0) return;
+	CurrentSaveIndex=SlotsDetails.Max();
+	if (SaveFiles.Num() <= 0) return SlotsDetails;
 	for (const FString& GamesDirectory : SaveFiles)
 	{
 		FDateTime FileCreationTime = PlatformFile.GetTimeStamp(*GamesDirectory);
@@ -23,6 +25,7 @@ void GameManager::UpDateSlotsDetail()
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, SlotDetail.SlotName);
 		SlotsDetails.Add(SlotDetail);
 	}
+	return SlotsDetails;
 }
 
 /**
@@ -125,4 +128,24 @@ UGameSaves* GameManager::LoadLastGame()
 		return LoadedGame;
 	}
 	return nullptr;
+}
+
+/**
+ * @brief 设置选择参数存档
+ */
+void GameManager::SetLoadSlotDetail(FString selectSlotName, int32 userIndex)
+{
+	bSelectSave=true;
+	SelectSlotName=selectSlotName;
+	UserIndex=userIndex;
+}
+
+FString GameManager::GetSelectSlotName()
+{
+	return SelectSlotName;
+}
+
+int32 GameManager::GetUserIndex()
+{
+	return UserIndex;
 }

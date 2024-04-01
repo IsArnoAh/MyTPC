@@ -40,8 +40,11 @@ public:
 
 
 	// 基本函数配置
+	// 预构造函数
 	virtual void NativeConstruct() override;
+	// 构造函数
 	UGamingMenuBtnGroup(const FObjectInitializer& ObjectInitializer);
+	
 	UFUNCTION(BlueprintCallable)
 	void BackGame();
 	UFUNCTION(BlueprintCallable)

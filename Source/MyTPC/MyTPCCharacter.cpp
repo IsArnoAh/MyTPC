@@ -18,48 +18,48 @@
 AMyTPCCharacter::AMyTPCCharacter()
 {
 	// 初始枚举状态
-	CurrentState=Idle;
-	CurrentWeapon=Punch;
+	CurrentState = Idle;
+	CurrentWeapon = Punch;
 	// 胶囊体体积设置
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	// 旋转值
 	TurnRateGamepad = 50.f;
-	
+
 	// 相机旋转参数设置
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-	
+
 	// 移动配置
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
-	
+
 	//角色移动部分参数配置
 	GetCharacterMovement()->JumpZVelocity = DefaultJumpZVelocity;
 	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed =WalkSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
-	
+
 	//创建相机与角色组件弹簧臂
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 600.0f; // The camera follows at this distance behind the character
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
-	CameraBoom->bDoCollisionTest=true;
-	
+	CameraBoom->bDoCollisionTest = true;
+
 	// 创建相机
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	// Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-	
+
 	// 创建MotionWarpingComponent组件实例
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	//创建数值组件;
-	 PlayerValue = CreateDefaultSubobject<UPlayerValueComponent>(TEXT("PlayerValue"));
+	PlayerValue = CreateDefaultSubobject<UPlayerValueComponent>(TEXT("PlayerValue"));
 	//创建战斗组件
-	Sys_Attack=CreateDefaultSubobject<USys_Attack>(TEXT("SysAttack"));
-	
+	Sys_Attack = CreateDefaultSubobject<USys_Attack>(TEXT("SysAttack"));
 }
 
 /**
@@ -72,22 +72,21 @@ void AMyTPCCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyTPCCharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	
-	PlayerInputComponent->BindAction("Run",IE_Pressed,this,&AMyTPCCharacter::Run);
-	PlayerInputComponent->BindAction("Run",IE_Released,this,&AMyTPCCharacter::StopRunning);
-	
-	PlayerInputComponent->BindAction("Crouch",IE_Pressed,this,&AMyTPCCharacter::MyCrouch);
-	PlayerInputComponent->BindAction("Crouch",IE_Released,this,&AMyTPCCharacter::StopCrouch);
-	
+
+	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AMyTPCCharacter::Run);
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &AMyTPCCharacter::StopRunning);
+
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AMyTPCCharacter::MyCrouch);
+	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AMyTPCCharacter::StopCrouch);
+
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AMyTPCCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &AMyTPCCharacter::MoveRight);
-	
+
 	//映射操作
 	PlayerInputComponent->BindAxis("Turn Right / Left Mouse", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("Turn Right / Left Gamepad", this, &AMyTPCCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("Look Up / Down Mouse", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("Look Up / Down Gamepad", this, &AMyTPCCharacter::LookUpAtRate);
-
 }
 
 /**
@@ -97,8 +96,9 @@ void AMyTPCCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	GetWorldTimerManager().SetTimer(CameraMoveTimerHandle, this, &AMyTPCCharacter::UpdateCameraArmLength, 0.01f, true);
+
 	// 判断存档加载
-	Gm.bSelectSave?Gm.SelectLoadGame(Gm.SelectSlotName,Gm.UserIndex):Gm.LoadLastGame();
+	LoadValueConfig();
 }
 
 /**
@@ -109,9 +109,9 @@ void AMyTPCCharacter::TurnAtRate(float Rate)
 {
 	AddControllerYawInput(Rate * TurnRateGamepad * GetWorld()->GetDeltaSeconds());
 }
+
 void AMyTPCCharacter::LookUpAtRate(float Rate)
 {
-
 	AddControllerPitchInput(Rate * TurnRateGamepad * GetWorld()->GetDeltaSeconds());
 }
 
@@ -123,13 +123,12 @@ void AMyTPCCharacter::MoveForward(float Value)
 {
 	if ((Controller != nullptr) && (Value != 0.0f))
 	{
-		if (bIsCrouch || CurrentState==Running)
+		if (bIsCrouch || CurrentState == Running)
 		{
-			
 		}
 		else
 		{
-			CurrentState=Walking;
+			CurrentState = Walking;
 		}
 		// 定位向前向量
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -140,17 +139,17 @@ void AMyTPCCharacter::MoveForward(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
+
 void AMyTPCCharacter::MoveRight(float Value)
 {
-	if ( (Controller != nullptr) && (Value != 0.0f) )
+	if ((Controller != nullptr) && (Value != 0.0f))
 	{
-		if (bIsCrouch || CurrentState==Running)
+		if (bIsCrouch || CurrentState == Running)
 		{
-			
 		}
 		else
 		{
-			CurrentState=Walking;
+			CurrentState = Walking;
 		}
 		// 定位向右向量
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -167,31 +166,32 @@ void AMyTPCCharacter::MoveRight(float Value)
  */
 void AMyTPCCharacter::Run()
 {
-	if (CurrentState==Idle || CurrentState==Walking)
+	if (CurrentState == Idle || CurrentState == Walking)
 	{
 		const FVector ZeroVector(0.0f, 0.0f, 0.0f);
 		const FVector IsVector(RootComponent->GetComponentVelocity());
-		CurrentState=Running;
-		if (IsVector!=ZeroVector)
+		CurrentState = Running;
+		if (IsVector != ZeroVector)
 		{
-			GetCharacterMovement()->MaxWalkSpeed=RunSpeed;
+			GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 			GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
-			bIsCrouch=false;
+			bIsCrouch = false;
 			// Standing=true;
-			UpdateArmLengthParameters(250.0f,0.8f);
+			UpdateArmLengthParameters(250.0f, 0.8f);
 		}
-		else 
+		else
 		{
 			StopRunning();
-			CurrentState=Walking;
+			CurrentState = Walking;
 		}
 	}
 }
+
 void AMyTPCCharacter::StopRunning()
 {
-	CurrentState=Walking;
-	UpdateArmLengthParameters(170.0f,1.0f);
-	GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
+	CurrentState = Walking;
+	UpdateArmLengthParameters(170.0f, 1.0f);
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
 /**
@@ -200,19 +200,18 @@ void AMyTPCCharacter::StopRunning()
 void AMyTPCCharacter::Jump()
 {
 	Super::Jump();
-	if (CurrentState==Running || CurrentState==Walking)
+	if (CurrentState == Running || CurrentState == Walking)
 	{
-		
-		if (CurrentState==Running)
+		if (CurrentState == Running)
 		{
 			GetCharacterMovement()->JumpZVelocity = RunJumpZVelocity;
-			CurrentState=Jumping;
+			CurrentState = Jumping;
 		}
 		else
 		{
 			GetCharacterMovement()->JumpZVelocity = DefaultJumpZVelocity;
-			bIsCrouch=false;
-			GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
+			bIsCrouch = false;
+			GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 			GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 			CameraBoom->TargetArmLength = 170.0f;
 			// Standing=true;
@@ -225,28 +224,29 @@ void AMyTPCCharacter::Jump()
  */
 void AMyTPCCharacter::MyCrouch()
 {
-	if (CurrentState==Idle || CurrentState==Walking || CurrentState==Running || CurrentState==Assassinating)
+	if (CurrentState == Idle || CurrentState == Walking || CurrentState == Running || CurrentState == Assassinating)
 	{
-		GetCharacterMovement()->MaxWalkSpeed=CrouchSpeed;
+		GetCharacterMovement()->MaxWalkSpeed = CrouchSpeed;
 		// 更新FollowCamera的位置
-		bIsRun=false;
+		bIsRun = false;
 		// Standing=false;
-		bIsCrouch=true;
+		bIsCrouch = true;
 		GetCapsuleComponent()->SetCapsuleHalfHeight(68.0f);
-		UpdateArmLengthParameters(90.0f,0.8);
-		CurrentState=Crouching;
+		UpdateArmLengthParameters(90.0f, 0.8);
+		CurrentState = Crouching;
 	}
 }
+
 void AMyTPCCharacter::StopCrouch()
 {
-	bIsCrouch=false;
+	bIsCrouch = false;
 	// 更新FollowCamera的位置
-	FollowCamera->SetRelativeLocation(FVector(0,0,55));
-	GetCharacterMovement()->MaxWalkSpeed=WalkSpeed;
+	FollowCamera->SetRelativeLocation(FVector(0, 0, 55));
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
-	UpdateArmLengthParameters(170.0f,0.8f);
+	UpdateArmLengthParameters(170.0f, 0.8f);
 	// Standing=true;
-	CurrentState=Idle;
+	CurrentState = Idle;
 }
 
 /**
@@ -255,10 +255,10 @@ void AMyTPCCharacter::StopCrouch()
  */
 bool AMyTPCCharacter::UpdateJudgeVault()
 {
-	bool newJudge=true;
+	bool newJudge = true;
 	if (GetMovementComponent()->IsFalling() || GetMovementComponent()->IsFlying())
 	{
-		newJudge=false;
+		newJudge = false;
 	}
 	return newJudge;
 }
@@ -268,7 +268,7 @@ bool AMyTPCCharacter::UpdateJudgeVault()
  */
 void AMyTPCCharacter::DelayedSetAttacking(float delayTime)
 {
-	GetWorld()->GetTimerManager().SetTimer(DelayedAttackHandle,this,&AMyTPCCharacter::SetAttacking,delayTime,false);
+	GetWorld()->GetTimerManager().SetTimer(DelayedAttackHandle, this, &AMyTPCCharacter::SetAttacking, delayTime, false);
 }
 
 /**
@@ -276,7 +276,7 @@ void AMyTPCCharacter::DelayedSetAttacking(float delayTime)
  */
 void AMyTPCCharacter::SetAttacking()
 {
-	Sys_Attack->bAttacking=false;
+	Sys_Attack->bAttacking = false;
 }
 
 /**
@@ -284,10 +284,10 @@ void AMyTPCCharacter::SetAttacking()
  * @param TargetArmLength 相机弹簧臂长度
  * @param LerpSpeed 缩放速度
  */
-void AMyTPCCharacter::UpdateArmLengthParameters(float TargetArmLength,float LerpSpeed)
+void AMyTPCCharacter::UpdateArmLengthParameters(float TargetArmLength, float LerpSpeed)
 {
-	CameraTargetArmLength=TargetArmLength;
-	CameraLerpSpeed=LerpSpeed;
+	CameraTargetArmLength = TargetArmLength;
+	CameraLerpSpeed = LerpSpeed;
 	GetWorldTimerManager().SetTimer(CameraMoveTimerHandle, this, &AMyTPCCharacter::UpdateCameraArmLength, 0.01f, true);
 }
 
@@ -297,7 +297,8 @@ void AMyTPCCharacter::UpdateArmLengthParameters(float TargetArmLength,float Lerp
 void AMyTPCCharacter::UpdateCameraArmLength() const
 {
 	const float CurrentArmLength = CameraBoom->TargetArmLength;
-	CameraBoom->TargetArmLength = FMath::FInterpTo(CurrentArmLength, CameraTargetArmLength, GetWorld()->GetDeltaSeconds(), CameraLerpSpeed);
+	CameraBoom->TargetArmLength = FMath::FInterpTo(CurrentArmLength, CameraTargetArmLength,
+	                                               GetWorld()->GetDeltaSeconds(), CameraLerpSpeed);
 }
 
 /**
@@ -306,27 +307,27 @@ void AMyTPCCharacter::UpdateCameraArmLength() const
  */
 int AMyTPCCharacter::Attack()
 {
-	if (CurrentState==Idle || CurrentState==Running || CurrentState==Walking)
+	if (CurrentState == Idle || CurrentState == Running || CurrentState == Walking)
 	{
 		TArray<UAnimMontage*> currentAttackAnim;
 		// 选择武器动画
 		switch (CurrentWeapon)
 		{
-		case Punch:currentAttackAnim=Sys_Attack->PunchAttackMontages;
+		case Punch: currentAttackAnim = Sys_Attack->PunchAttackMontages;
 			break;
-		case Sword:currentAttackAnim=Sys_Attack->SwordAttackMontages;
+		case Sword: currentAttackAnim = Sys_Attack->SwordAttackMontages;
 			break;
-		case Gun:currentAttackAnim=Sys_Attack->SwordAttackMontages;// 随意填充，以扩展后续更新攻击动画
+		case Gun: currentAttackAnim = Sys_Attack->SwordAttackMontages; // 随意填充，以扩展后续更新攻击动画
 			break;
-		default:currentAttackAnim=Sys_Attack->PunchAttackMontages;// 随意填充，以扩展后续更新攻击动画
+		default: currentAttackAnim = Sys_Attack->PunchAttackMontages; // 随意填充，以扩展后续更新攻击动画
 			break;
 		}
 		if (!Sys_Attack->bAttacking)
 		{
-			const int tempIndex=Sys_Attack->AttackIndexChange(currentAttackAnim);
+			const int tempIndex = Sys_Attack->AttackIndexChange(currentAttackAnim);
 			PlayAnimMontage(currentAttackAnim[tempIndex]);
-			Sys_Attack->bAttacking=true;
-			if (tempIndex==0)
+			Sys_Attack->bAttacking = true;
+			if (tempIndex == 0)
 			{
 				DelayedSetAttacking(4.0f);
 			}
@@ -336,7 +337,8 @@ int AMyTPCCharacter::Attack()
 			}
 			if (!bAttackTimerActive)
 			{
-				GetWorldTimerManager().SetTimer(ResetAttackIndexHandle, this, &AMyTPCCharacter::ReAttackTimer, 6.4f, false);
+				GetWorldTimerManager().SetTimer(ResetAttackIndexHandle, this, &AMyTPCCharacter::ReAttackTimer, 6.4f,
+				                                false);
 				bAttackTimerActive = true;
 			}
 			return tempIndex;
@@ -350,11 +352,16 @@ int AMyTPCCharacter::Attack()
  */
 void AMyTPCCharacter::TestFunction()
 {
-	FDateTime CurrentTime = FDateTime::Now();
-	FString TimeString = CurrentTime.ToString(TEXT("%Y-%m-%d %H:%M:%S"));
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TimeString);
-	
-	// Gm.SaveGame();
+	const FString MapNameWithPrefix = GetWorld()->GetMapName();
+	const FString MapName = MapNameWithPrefix.Mid(MapNameWithPrefix.Find("_") + 3);
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, MapName);
+	const FDateTime CurrentTime = FDateTime::Now();
+	const FString TimeString = CurrentTime.ToString(TEXT("%Y-%m-%d %H:%M:%S"));
+	const FVector currentLocation=GetActorLocation();
+	Gm.GamingSaveGame(*MapName,currentLocation,TimeString,PlayerValue);
+	//FString temStr=TEXT("地图名称:%s,当前时间%s",MapFName.ToString(),TimeString);
+
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TEXT("Save"));
 }
 
 /**
@@ -362,7 +369,7 @@ void AMyTPCCharacter::TestFunction()
  */
 void AMyTPCCharacter::ReAttackTimer()
 {
-	bAttackTimerActive=false;
+	bAttackTimerActive = false;
 	Sys_Attack->ReSetAttackIndex();
 }
 
@@ -371,15 +378,19 @@ void AMyTPCCharacter::ReAttackTimer()
  */
 void AMyTPCCharacter::LoadValueConfig()
 {
-	if (const UGameSaves *LoadGameSaves=Gm.LoadLastGame())
+	if (Gm.bSelectSave)
 	{
-		const FString TempFString=FString::Printf(TEXT("the Savename is %s"),*LoadGameSaves->SaveSlotName);
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::White,TempFString);
+		if (const UGameSaves* LoadGameSaves = Gm.SelectLoadGame(Gm.GetSelectSlotName(), Gm.GetUserIndex()))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::White,TEXT("be select"));
+		}
 	}
 	else
 	{
-		const FString TempFString=FString::Printf(TEXT("nope saves"));
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::White,TempFString);
+		if (const UGameSaves* LoadGameSaves = Gm.LoadLastGame())
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::White,TEXT("last Game"));
+		}
 	}
 }
 
@@ -399,7 +410,7 @@ CharacterState AMyTPCCharacter::GetCurrentState()
  */
 void AMyTPCCharacter::SetCurrentState(CharacterState newStatue)
 {
-	CurrentState=newStatue;
+	CurrentState = newStatue;
 }
 
 /**
@@ -417,7 +428,7 @@ WeaponType AMyTPCCharacter::GetCurrentWeapon()
  */
 void AMyTPCCharacter::SetCurrentWeapon(WeaponType newWeapon)
 {
-	CurrentWeapon=newWeapon;
+	CurrentWeapon = newWeapon;
 }
 
 /**
@@ -428,4 +439,3 @@ UPlayerValueComponent* AMyTPCCharacter::GetPlayerValue()
 {
 	return PlayerValue;
 }
-

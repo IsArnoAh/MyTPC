@@ -27,6 +27,8 @@ void UMainMenuBtnGroup::NativeConstruct()
  */
 void UMainMenuBtnGroup::NewGame()
 {
+	Gm->UpDateSlotsDetail();
+	Gm->SaveGame();
 	const FName LevelName = FName("Map_Tutorial"); // 加载的关卡名称
 	FSimpleDelegateGraphTask::CreateAndDispatchWhenReady(
 		FSimpleDelegateGraphTask::FDelegate::CreateUObject(this, &UMainMenuBtnGroup::LoadLevelAsync, LevelName),
@@ -42,9 +44,6 @@ void UMainMenuBtnGroup::NewGame()
  */
 void UMainMenuBtnGroup::LoadLevelAsync(FName LevelName) const
 {
-	//Gm->CurrentSaveIndex=0;
-	Gm->SaveGame();
-	
 	UGameplayStatics::OpenLevel(this, LevelName, true, LevelName.ToString()); // 加载关卡
 }
 
