@@ -352,19 +352,25 @@ int AMyTPCCharacter::Attack()
  */
 void AMyTPCCharacter::TestFunction()
 {
-	
+	if (CurrentState!=BeAttacked)
+	{
+		CurrentState=BeAttacked;
+		Sys_Attack->BeAttacked(this);
+	}
+}
+
+/**
+ * @brief 保存游戏
+ */
+void AMyTPCCharacter::GameSave()
+{
 	const FString MapNameWithPrefix = GetWorld()->GetMapName();
 	const FString MapName = MapNameWithPrefix.Mid(MapNameWithPrefix.Find("_") + 3);
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, MapName);
 	const FDateTime CurrentTime = FDateTime::Now();
 	const FString TimeString = CurrentTime.ToString(TEXT("%Y-%m-%d %H:%M:%S"));
 	const FVector currentLocation=GetActorLocation();
-	FString TempFstring=FString::Printf(TEXT("the Vector is %s"),*currentLocation.ToString());
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, TempFstring);
 	Gm.GamingSaveGame(*MapName,currentLocation,TimeString,PlayerValue);
-	//FString temStr=TEXT("地图名称:%s,当前时间%s",MapFName.ToString(),TimeString);
-
-	
 }
 
 /**

@@ -13,6 +13,7 @@ UCLASS()
 class MYTPC_API AEnemies : public ACharacter,public IEnemiesInterface
 {
 	GENERATED_BODY()
+	// 敌人基本属性
 	float Health;
 	int Level;
 	float Damage;
@@ -33,6 +34,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	
 	UPROPERTY(BlueprintReadWrite,Category="Enemies_Combat")
 	USys_Attack* Sys_Attack; 
 

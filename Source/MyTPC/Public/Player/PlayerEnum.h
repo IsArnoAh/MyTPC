@@ -11,6 +11,7 @@ enum CharacterState {
 	Talking,
 	Shopping,
 	Attacking,
+	BeAttacked,
 	Assassinating,
 	Dead
 };

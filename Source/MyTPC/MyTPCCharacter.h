@@ -6,7 +6,6 @@
 #include "Player/PlayerValueComponent.h"
 #include "Player/PlayerEnum.h"
 #include "Sys_Attack.h"
-#include "GameSaves.h"
 #include "GameManager.h"
 #include "MyTPCCharacter.generated.h"
 
@@ -33,8 +32,6 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool bJudgeVault;
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
-	bool CanAssassin;
 	
 	//奔跑状态，蹲伏状态
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
@@ -43,6 +40,8 @@ public:
 	bool bIsCrouch;
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	bool Standing=true;
+	UPROPERTY(BlueprintReadWrite,Category="Attack",EditAnywhere)
+	bool bAssassinReady=false;
 	//默认参数设置，跳跃高度，和移动速度，
 	UPROPERTY(EditAnywhere, Category = "Jump")
 	float DefaultJumpZVelocity = 200.f;
@@ -108,7 +107,6 @@ private:
 protected:
 	
 	virtual void BeginPlay() override;
-
 	
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
@@ -135,12 +133,14 @@ protected:
 	// 攻击函数
 	UFUNCTION(BlueprintCallable,Category="Attack")
 	int Attack();
-	
 	UFUNCTION(BlueprintCallable, Category="Attack")
 	void SetAttacking();
-
 	UFUNCTION(BlueprintCallable,Category="Attack")
 	void DelayedSetAttacking(float delayTime);
+
+	// 存档相关函数声明
+	UFUNCTION(BlueprintCallable,Category="GameSave")
+	void GameSave();
 	/** 
 	 * Called via input to turn at a given rate. 
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate

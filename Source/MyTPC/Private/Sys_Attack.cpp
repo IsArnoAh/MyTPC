@@ -87,5 +87,6 @@ void USys_Attack::BeAttacked(ACharacter* Character)
 {
 	// 随机播放攻击动画
 	const int RandIndex = FMath::RandRange(0, 1);
+	
 	Character->PlayAnimMontage(BeAttackedReact[RandIndex]);
 }
